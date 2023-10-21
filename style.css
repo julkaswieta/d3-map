@@ -1,0 +1,15 @@
+svg {
+    border-style: solid;
+    border-color: black;
+}
+
+/* .country {
+    fill: #ccc;
+    stroke: #999;
+    stroke-width: 0.5px;
+} */
+
+.country:hover {
+    fill: red;
+    stroke: red;
+}
