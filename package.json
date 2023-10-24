@@ -12,7 +12,9 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "d3": "^7.8.5",
+    "fs": "^0.0.1-security",
     "topojson": "^3.0.2"
   }
 }

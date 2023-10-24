@@ -1,13 +1,8 @@
 svg {
     border-style: solid;
     border-color: black;
+    background-color: #4b4b61;
 }
-
-/* .country {
-    fill: #ccc;
-    stroke: #999;
-    stroke-width: 0.5px;
-} */
 
 .country:hover {
     fill: red;
