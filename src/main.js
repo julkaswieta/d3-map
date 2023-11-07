@@ -8,11 +8,9 @@ const svg = d3.select("body").append("svg")
     .attr("width", constants.SVG_WIDTH)
     .attr("height", constants.SVG_HEIGHT);
 
-const chart = svg.append("g").classed("chart", true).attr("fill", "black");
-
+const chart = svg.append("g").classed("chart", true);
 // this is what takes the coordinates of the countries borders and translates it onto a 2d plane using different cartographic methods
-const projection = d3.geoNaturalEarth1()
-    .translate([constants.SVG_WIDTH / 2, constants.SVG_HEIGHT / 2]);
+const projection = d3.geoNaturalEarth1();
 
 const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection  
 
@@ -22,8 +20,9 @@ d3.csv("../data/production.csv").then(function (coffeeData) {
         d3.max(coffeeData, d => d["2019/20"])
     ]);
 
-    d3.json("../data/countries-50m.json").then(function (geoData) {
-        const countries = feature(geoData, geoData.objects.countries).features;
+    d3.json("../data/countries-110m.json").then(function (geoData) {
+        const geoJson = feature(geoData, geoData.objects.countries);
+        const countries = geoJson.features;
         // merge the dataset into the geojson as we need a single dataset to bind
         for (let i = 0; i < coffeeData.length; i++) {
             let coffeeCountry = coffeeData[i].Country;
@@ -39,6 +38,10 @@ d3.csv("../data/production.csv").then(function (coffeeData) {
 
             }
         }
+
+        // fill up the svg element with the map
+        projection.fitExtent([[0, 0], [constants.SVG_WIDTH, constants.SVG_HEIGHT]], geoJson);
+
         // get the value for a specific country 
         //console.log(countries.filter(d => d.properties.name == "Zimbabwe")[0].properties.value);
 
@@ -53,6 +56,11 @@ d3.csv("../data/production.csv").then(function (coffeeData) {
             .append("title").text(d => d.properties.name + " " + d.properties.value);
     })
 });
+
+svg.call(d3.zoom()
+    .extent([[0, 0], [constants.SVG_WIDTH, constants.SVG_HEIGHT]])
+    .scaleExtent([1, 8])
+    .on("zoom", handleZoom));
 
 function handleZoom(event) {
     chart.attr("transform", event.transform);
