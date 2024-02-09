@@ -1,8 +1,8 @@
-svg {
+/* svg {
     border-style: solid;
     border-color: black;
     background-color: #4b4b61;
-}
+} */
 
 .country:hover {
     fill: red;
