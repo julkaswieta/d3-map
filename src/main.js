@@ -24,13 +24,15 @@ const sliderBox = d3.select('#slider')
     .append('g')
     .attr('transform', 'translate(30,30)');
 
+let year = "2019";
+
 d3.csv("../data/production.csv").then(function (coffeeData) {
     color.domain([
-        d3.min(coffeeData, d => d["2019/20"]),
-        d3.max(coffeeData, d => d["2019/20"])
+        d3.min(coffeeData, d => d[year]),
+        d3.max(coffeeData, d => d[year])
     ]);
 
-    let values = coffeeData.map(value => value["2019/20"]);
+    let values = coffeeData.map(value => value[year]);
     console.log(values);
     coffeeData.columns.shift(); // get the columns and remove the first one ("Country")
     let years = coffeeData.columns;
@@ -39,52 +41,59 @@ d3.csv("../data/production.csv").then(function (coffeeData) {
     let yearsNumbers = years.map(year => +year.slice(0, 4))
     console.log(yearsNumbers);
 
-    slider.min(d3.min(yearsNumbers))
-        .max(d3.max(yearsNumbers))
-        .tickValues(yearsNumbers)
-        .step(1)
-        .width(1000)
-        .tickFormat(d3.format("")) // removes the comma in thousands
-        .displayValue(true);
-
-    sliderBox.call(slider);
-
     d3.json("../data/countries-110m.json").then(function (geoData) {
         const geoJson = feature(geoData, geoData.objects.countries);
         const countries = geoJson.features;
-        // merge the dataset into the geojson as we need a single dataset to bind
-        for (let i = 0; i < coffeeData.length; i++) {
-            let coffeeCountry = coffeeData[i].Country;
-            let coffeeAmount = parseFloat(coffeeData[i]["2019/20"]);
-            //console.log(coffeeCountry + " " + coffeeAmount);
-
-            for (var j = 0; j < countries.length; j++) {
-                let geoCountry = countries[j].properties.name;
-                if (coffeeCountry == geoCountry) {
-                    countries[j].properties.value = coffeeAmount;
-                    break;
-                }
-
-            }
-        }
-
         // fill up the svg element with the map
         projection.fitExtent([[0, 0], [constants.SVG_WIDTH, constants.SVG_HEIGHT]], geoJson);
+        // merge the dataset into the geojson as we need a single dataset to bind
+        loadCoffeeData(coffeeData, countries);
+
+        slider.min(d3.min(yearsNumbers))
+            .max(d3.max(yearsNumbers))
+            .tickValues(yearsNumbers)
+            .step(1)
+            .width(1000)
+            .tickFormat(d3.format("")) // removes the comma in thousands
+            .displayValue(true)
+            .default(2019)
+            .on("onchange", function (val) {
+                year = val;
+                loadCoffeeData(coffeeData, countries);
+            })
+
+        sliderBox.call(slider);
 
         // get the value for a specific country 
         //console.log(countries.filter(d => d.properties.name == "Zimbabwe")[0].properties.value);
-
-        chart.selectAll("path")
-            .data(countries) // that's the data points
-            .join("path") // create a new path for each country
-            .classed("country", true)
-            .attr("d", pathGenerator) // that's the actual coordinates of the path 
-            .attr("fill", d => color(d.properties.value) ?? "#ccc")
-            .attr("stroke", "black")
-            // alternatively, can say d => geoGenerator(d)  
-            .append("title").text(d => d.properties.name + " " + d.properties.value);
     })
 });
+
+function loadCoffeeData(coffeeData, countries) {
+    for (let i = 0; i < coffeeData.length; i++) {
+        let coffeeCountry = coffeeData[i].Country;
+        let coffeeAmount = parseFloat(coffeeData[i][year]);
+        //console.log(coffeeCountry + " " + coffeeAmount);
+
+        for (var j = 0; j < countries.length; j++) {
+            let geoCountry = countries[j].properties.name;
+            if (coffeeCountry == geoCountry) {
+                countries[j].properties.value = coffeeAmount;
+                break;
+            }
+        }
+    }
+
+    chart.selectAll("path")
+        .data(countries) // that's the data points
+        .join("path") // create a new path for each country
+        .classed("country", true)
+        .attr("d", pathGenerator) // that's the actual coordinates of the path 
+        .attr("fill", d => color(d.properties.value) ?? "#ccc")
+        .attr("stroke", "black")
+        // alternatively, can say d => geoGenerator(d)  
+        .append("title").text(d => d.properties.name + " " + d.properties.value);
+}
 
 svg.call(d3.zoom()
     .extent([[0, 0], [constants.SVG_WIDTH, constants.SVG_HEIGHT]])
