@@ -109,12 +109,19 @@ function loadCoffeeData(coffeeData, countries) {
     chart.selectAll("path")
         .data(countries) // that's the data points
         .join("path") // create a new path for each country
-        .classed("country", true)
+        .attr("class", (d) => color(d.properties.value) === undefined ? "" : "c" + color(d.properties.value).substring(1))
         .attr("d", pathGenerator) // that's the actual coordinates of the path 
         .attr("fill", d => color(d.properties.value) ?? "#ccc")
         .attr("stroke", "black")
+        .on("mouseover", function () {
+            d3.select(this).style("fill", "red")
+        })
+        .on("mouseout", function (d) {
+            d3.select(this).style("fill", d => color(d.properties.value))
+        })
         // alternatively, can say d => geoGenerator(d)  
-        .append("title").text(d => d.properties.name + " " + d.properties.value); // TODO: needs changed
+        .append("title").text(d => d.properties.name + " " + d.properties.value) // TODO: needs changed
+
 }
 
 svg.call(d3.zoom()

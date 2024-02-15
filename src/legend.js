@@ -104,7 +104,9 @@ export function Legend(color, {
             .attr("y", marginTop)
             .attr("width", (d, i) => x(i) - x(i - 1))
             .attr("height", height - marginTop - marginBottom)
-            .attr("fill", d => d);
+            .attr("fill", d => d)
+            .on("mouseover", (d, i) => d3.selectAll("path.c" + i.substring(1)).style("fill", "lightblue"))
+            .on("mouseout", (d, i) => d3.selectAll("path.c" + i.substring(1)).style("fill", i));
 
         tickValues = d3.range(thresholds.length);
         tickFormat = i => thresholdFormat(thresholds[i], i);
