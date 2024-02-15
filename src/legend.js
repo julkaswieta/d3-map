@@ -22,6 +22,7 @@ export function Legend(color, {
         canvas.width = n;
         canvas.height = 1;
         const context = canvas.getContext("2d");
+
         for (let i = 0; i < n; ++i) {
             context.fillStyle = color(i / (n - 1));
             context.fillRect(i, 0, 1, 1);
@@ -33,9 +34,7 @@ export function Legend(color, {
         .attr("width", width)
         .attr("height", height)
         .attr("viewBox", [0, 0, width, height])
-        .style("overflow", "visible")
-        .style("display", "block")
-        .style("background-color", "white");
+        .style("overflow", "visible");
 
     let tickAdjust = g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height);
     let x;

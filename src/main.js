@@ -16,9 +16,10 @@ const pathGenerator = d3.geoPath().projection(projection); // this is creating p
 
 const translateLegend = constants.SVG_HEIGHT - 50;
 
-const colourLegend = svg.append("g")
-    .attr("transform", "translate(0," + translateLegend + ")")
-    .classed("legend", true);
+const colourLegend = d3.select("#app").append("g")
+    .classed("legend", true)
+    .style("top", "570px")
+    .style("left", "20px");
 
 const slider = sliderBottom();
 
@@ -83,8 +84,11 @@ function loadCoffeeData(coffeeData, countries) {
             title: "Coffee produced (in thousands of 60kg bags)",
             width: constants.LEGEND_WIDTH,
             tickFormat: ".0f"
-        })
-    );
+        }))
+        .style("position", "absolute")
+        .style("top", "570px")
+        .style("left", "20px")
+        .style("background-color", "white");
 
     console.log(svg.selectChild("legend"));
 
