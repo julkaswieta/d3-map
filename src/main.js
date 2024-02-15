@@ -2,8 +2,7 @@ import * as d3 from "d3";
 import { feature } from "topojson"
 import * as constants from "./constants.js"
 import { sliderBottom } from "d3-simple-slider";
-
-const color = d3.scaleLinear([1, 10], d3.schemeBlues[9]);
+import { Legend } from "./legend.js"
 
 const svg = d3.select("#app").append("svg")
     .attr("width", constants.SVG_WIDTH)
@@ -14,6 +13,12 @@ const chart = svg.append("g").classed("chart", true);
 const projection = d3.geoNaturalEarth1();
 
 const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
+
+const translateLegend = constants.SVG_HEIGHT - 50;
+
+const colourLegend = svg.append("g")
+    .attr("transform", "translate(0," + translateLegend + ")")
+    .classed("legend", true);
 
 const slider = sliderBottom();
 
@@ -27,11 +32,6 @@ const sliderBox = d3.select('#slider')
 let year = "2019";
 
 d3.csv("../data/production.csv").then(function (coffeeData) {
-    color.domain([
-        d3.min(coffeeData, d => d[year]),
-        d3.max(coffeeData, d => d[year])
-    ]);
-
     let values = coffeeData.map(value => value[year]);
     console.log(values);
     coffeeData.columns.shift(); // get the columns and remove the first one ("Country")
@@ -56,7 +56,7 @@ d3.csv("../data/production.csv").then(function (coffeeData) {
             .width(1000)
             .tickFormat(d3.format("")) // removes the comma in thousands
             .displayValue(true)
-            .default(2019)
+            .default(year)
             .on("onchange", function (val) {
                 year = val;
                 loadCoffeeData(coffeeData, countries);
@@ -70,6 +70,24 @@ d3.csv("../data/production.csv").then(function (coffeeData) {
 });
 
 function loadCoffeeData(coffeeData, countries) {
+    const color = d3.scaleQuantize([
+        d3.min(coffeeData, d => +d[year]),
+        d3.max(coffeeData, d => +d[year])
+    ], d3.schemeGreens[9]);
+
+    colourLegend.selectChildren().remove();
+
+    colourLegend.append(() => Legend(
+        color,
+        {
+            title: "Coffee produced (in thousands of 60kg bags)",
+            width: constants.LEGEND_WIDTH,
+            tickFormat: ".0f"
+        })
+    );
+
+    console.log(svg.selectChild("legend"));
+
     for (let i = 0; i < coffeeData.length; i++) {
         let coffeeCountry = coffeeData[i].Country;
         let coffeeAmount = parseFloat(coffeeData[i][year]);
@@ -92,7 +110,7 @@ function loadCoffeeData(coffeeData, countries) {
         .attr("fill", d => color(d.properties.value) ?? "#ccc")
         .attr("stroke", "black")
         // alternatively, can say d => geoGenerator(d)  
-        .append("title").text(d => d.properties.name + " " + d.properties.value);
+        .append("title").text(d => d.properties.name + " " + d.properties.value); // TODO: needs changed
 }
 
 svg.call(d3.zoom()
