@@ -4,7 +4,7 @@ import * as constants from "./constants.js"
 import { sliderBottom } from "d3-simple-slider";
 import { Legend } from "./legend.js"
 
-const svg = d3.select("#app").append("svg")
+const svg = d3.select("#visualisation").append("svg")
     .attr("width", constants.SVG_WIDTH)
     .attr("height", constants.SVG_HEIGHT);
 
@@ -14,9 +14,7 @@ const projection = d3.geoNaturalEarth1();
 
 const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
 
-const translateLegend = constants.SVG_HEIGHT - 50;
-
-const colourLegend = d3.select("#app").append("g")
+const colourLegend = d3.select("#visualisation").append("g")
     .classed("legend", true)
     .style("top", "570px")
     .style("left", "20px");
@@ -34,13 +32,13 @@ let year = "2019";
 
 d3.csv("../data/production.csv").then(function (coffeeData) {
     let values = coffeeData.map(value => value[year]);
-    console.log(values);
+    //console.log(values);
     coffeeData.columns.shift(); // get the columns and remove the first one ("Country")
     let years = coffeeData.columns;
-    console.log(coffeeData.columns);
+    //console.log(coffeeData.columns);
 
     let yearsNumbers = years.map(year => +year.slice(0, 4))
-    console.log(yearsNumbers);
+    //console.log(yearsNumbers);
 
     d3.json("../data/countries-110m.json").then(function (geoData) {
         const geoJson = feature(geoData, geoData.objects.countries);
@@ -90,8 +88,6 @@ function loadCoffeeData(coffeeData, countries) {
         .style("left", "20px")
         .style("background-color", "white");
 
-    console.log(svg.selectChild("legend"));
-
     for (let i = 0; i < coffeeData.length; i++) {
         let coffeeCountry = coffeeData[i].Country;
         let coffeeAmount = parseFloat(coffeeData[i][year]);
@@ -110,18 +106,12 @@ function loadCoffeeData(coffeeData, countries) {
         .data(countries) // that's the data points
         .join("path") // create a new path for each country
         .attr("class", (d) => color(d.properties.value) === undefined ? "" : "c" + color(d.properties.value).substring(1))
+        .classed("country", true)
         .attr("d", pathGenerator) // that's the actual coordinates of the path 
         .attr("fill", d => color(d.properties.value) ?? "#ccc")
         .attr("stroke", "black")
-        .on("mouseover", function () {
-            d3.select(this).style("fill", "red")
-        })
-        .on("mouseout", function (d) {
-            d3.select(this).style("fill", d => color(d.properties.value))
-        })
         // alternatively, can say d => geoGenerator(d)  
         .append("title").text(d => d.properties.name + " " + d.properties.value) // TODO: needs changed
-
 }
 
 svg.call(d3.zoom()

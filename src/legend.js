@@ -7,7 +7,7 @@ export function Legend(color, {
     title,
     tickSize = 6,
     width = 320,
-    height = 44 + tickSize,
+    height = 52 + tickSize,
     marginTop = 18,
     marginRight = 0,
     marginBottom = 16 + tickSize,
@@ -105,8 +105,14 @@ export function Legend(color, {
             .attr("width", (d, i) => x(i) - x(i - 1))
             .attr("height", height - marginTop - marginBottom)
             .attr("fill", d => d)
-            .on("mouseover", (d, i) => d3.selectAll("path.c" + i.substring(1)).style("fill", "lightblue"))
-            .on("mouseout", (d, i) => d3.selectAll("path.c" + i.substring(1)).style("fill", i));
+            .on("mouseover", function (d, i) {
+                d3.selectAll("path.c" + i.substring(1)).style("fill", "lightblue");
+                d3.select(this).style("fill", "lightblue")
+            })
+            .on("mouseout", function (d, i) {
+                d3.selectAll("path.c" + i.substring(1)).style("fill", i);
+                d3.select(this).style("fill", i);
+            });
 
         tickValues = d3.range(thresholds.length);
         tickFormat = i => thresholdFormat(thresholds[i], i);
