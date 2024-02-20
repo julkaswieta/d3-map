@@ -1,9 +1,32 @@
 import * as d3 from "d3"
 
+const LEGEND_WIDTH = 500;
+
+export function setupLegend(color) {
+    const colourLegend = d3.select("#visualisation").append("g")
+        .classed("legend", true)
+        .style("top", "570px")
+        .style("left", "20px");
+
+    colourLegend.selectChildren().remove();
+
+    colourLegend.append(() => Legend(
+        color,
+        {
+            title: "Coffee produced (in thousands of 60kg bags)",
+            width: LEGEND_WIDTH,
+            tickFormat: ".0f"
+        }))
+        .style("position", "absolute")
+        .style("top", "570px")
+        .style("left", "20px")
+        .style("background-color", "white");
+}
+
 // Copyright 2021, Observable Inc.
 // Released under the ISC license.
 // https://observablehq.com/@d3/color-legend
-export function Legend(color, {
+function Legend(color, {
     title,
     tickSize = 6,
     width = 320,
