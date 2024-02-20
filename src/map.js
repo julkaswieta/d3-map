@@ -1,5 +1,6 @@
 import * as d3 from "d3"
 import { setupLegend } from "./legend.js"
+import { showTooltip, hideTooltip } from "./tooltip.js"
 
 const SVG_WIDTH = 1000;
 const SVG_HEIGHT = 600;
@@ -36,7 +37,11 @@ export function setupMap(coffeeData, countries, year) {
         .attr("d", pathGenerator) // that's the actual coordinates of the path 
         .attr("fill", d => color(d.properties[year]) ?? "#ccc")
         .attr("stroke", "black")
-        .append("title").text(d => d.properties.name + " " + d.properties[year]) // TODO: needs changed
+        //.append("title").text(d => d.properties.name + " " + d.properties[year]) // TODO: needs changed
+        .on("mouseover", function (e, i) {
+            showTooltip(i, this);
+        })
+        .on("mouseout", hideTooltip);
 
 }
 svg.call(d3.zoom()
