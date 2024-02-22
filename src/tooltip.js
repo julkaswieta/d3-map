@@ -1,8 +1,9 @@
 import { createPopper } from "@popperjs/core";
 import { select } from "d3";
+import { createLineChart } from "./linechart";
 
 const MARGIN = { top: 20, right: 10, left: 10, bottom: 20 };
-const TOOLTIP_WIDTH = 150;
+const TOOLTIP_WIDTH = 200;
 const TOOLTIP_HEIGHT = 150;
 
 const tooltip = document.querySelector("#tooltip");
@@ -38,13 +39,6 @@ export function showTooltip(countryData, targetElement, year) {
         .style("word-wrap", "normal")
         .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right)
 
-    const lineChart = svg.append("rect")
-        .attr("width", "50")
-        .attr("height", "50")
-        .attr("x", 50)
-        .attr("y", 50)
-        .style("fill", "red")
-
     const amount = svg.append("g")
         .attr("transform", `translate(10, 40)`)
         .attr("width", TOOLTIP_WIDTH);
@@ -57,8 +51,11 @@ export function showTooltip(countryData, targetElement, year) {
         .style("word-wrap", "normal")
         .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
 
+    const lineChart = svg.append("g")
+        .attr("id", "linechart-container")
+        .attr("transform", `translate(10, 80)`);
 
-
+    createLineChart(countryData, year);
 
     if (popperInstance) {
         popperInstance.destroy();
