@@ -5,6 +5,13 @@
 } */
 
 .country:hover {
-    fill: red;
-    stroke: red;
+    fill: lightsalmon;
+    stroke: salmon;
+}
+
+#tooltip-container {
+    border-color: black;
+    border-radius: 5px;
+    border-style: solid;
+    background-color: floralwhite;
 }

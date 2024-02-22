@@ -39,7 +39,7 @@ export function setupMap(coffeeData, countries, year) {
         .attr("stroke", "black")
         //.append("title").text(d => d.properties.name + " " + d.properties[year]) // TODO: needs changed
         .on("mouseover", function (e, i) {
-            showTooltip(i, this);
+            showTooltip(i, this, year);
         })
         .on("mouseout", hideTooltip);
 
