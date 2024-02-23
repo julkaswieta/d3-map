@@ -129,12 +129,12 @@ function Legend(color, {
             .attr("height", height - marginTop - marginBottom)
             .attr("fill", d => d)
             .on("mouseover", function (d, i) {
-                d3.selectAll("path.c" + i.substring(1)).style("fill", "lightblue");
-                d3.select(this).style("fill", "lightblue")
+                d3.selectAll("path.c" + i.substring(1)).attr("fill", "lightblue");
+                d3.select(this).attr("fill", "lightblue")
             })
             .on("mouseout", function (d, i) {
-                d3.selectAll("path.c" + i.substring(1)).style("fill", i);
-                d3.select(this).style("fill", i);
+                d3.selectAll("path.c" + i.substring(1)).attr("fill", i);
+                d3.select(this).attr("fill", i);
             });
 
         tickValues = d3.range(thresholds.length);
