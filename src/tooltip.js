@@ -49,17 +49,18 @@ export function showTooltip(countryData, targetElement, year) {
         .attr("height", 30)
         .text((countryData.properties[year] === undefined) ? "No data" : countryData.properties[year])
         .style("word-wrap", "normal")
-        .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
+        .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right)
+        .attr("fill", (countryData.properties[year] === undefined) ? "black" : "red")
 
     const lineChart = svg.append("g")
         .attr("id", "linechart-container")
-        .attr("transform", `translate(10, 80)`);
+        .attr("transform", `translate(10, 40)`);
 
-    createLineChart(countryData, year);
+    if (countryData.properties[year] !== undefined)
+        createLineChart(countryData, year);
 
-    if (popperInstance) {
+    if (popperInstance)
         popperInstance.destroy();
-    }
 
     createPopperInstance(targetElement);
 }
