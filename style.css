@@ -1,8 +1,9 @@
-/* svg {
+#map {
     border-style: solid;
     border-color: black;
-    background-color: #4b4b61;
-} */
+    border-width: 1px;
+    border-radius: 5px;
+}
 
 .country:hover {
     stroke-width: 2px;
@@ -14,4 +15,12 @@
     border-radius: 5px;
     border-style: solid;
     background-color: floralwhite;
+}
+
+#legend {
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 2px;
 }

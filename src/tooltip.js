@@ -1,5 +1,5 @@
 import { createPopper } from "@popperjs/core";
-import { select } from "d3";
+import { select, format } from "d3";
 import { createLineChart } from "./linechart";
 
 const MARGIN = { top: 20, right: 10, left: 10, bottom: 20 };
@@ -47,7 +47,7 @@ export function showTooltip(countryData, targetElement, year) {
         .attr("x", 0)
         .attr("y", 0)
         .attr("height", 30)
-        .text((countryData.properties[year] === undefined) ? "No data" : countryData.properties[year])
+        .text((countryData.properties[year] === undefined) ? "No data" : format(",")(countryData.properties[year]) + " bags")
         .style("word-wrap", "normal")
         .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right)
         .attr("fill", (countryData.properties[year] === undefined) ? "black" : "red")

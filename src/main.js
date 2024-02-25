@@ -1,8 +1,9 @@
 import { csv, json } from "d3";
 import { feature } from "topojson"
 import { createSlider, slider, sliderBox } from "./slider.js";
-import { setupMap, resizeMap } from "./map.js";
+import { setupMap, resizeMap, getColor } from "./map.js";
 import { processCoffeeData } from "./data.js";
+import { setupLegend } from "./legend.js";
 
 let year = "2019";
 
@@ -16,14 +17,15 @@ csv("../data/production.csv").then(function (coffeeData) {
         const countries = geoJson.features;
         // fill up the svg element with the map
         resizeMap(geoJson);
-        processCoffeeData(coffeeData, countries);
         // merge the dataset into the geojson as we need a single dataset to bind
-        setupMap(coffeeData, countries, year);
+        processCoffeeData(coffeeData, countries);
+        setupLegend(getColor());
+        setupMap(countries, year);
 
         createSlider(yearsNumbers, year)
             .on("onchange", function (val) {
                 year = val;
-                setupMap(coffeeData, countries, year);
+                setupMap(countries, year);
             })
 
         sliderBox.call(slider);

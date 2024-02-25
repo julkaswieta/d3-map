@@ -3,12 +3,7 @@ import * as d3 from "d3"
 const LEGEND_WIDTH = 500;
 
 export function setupLegend(color) {
-    const colourLegend = d3.select("#visualisation").append("g")
-        .classed("legend", true)
-        .style("top", "570px")
-        .style("left", "20px");
-
-    colourLegend.selectChildren().remove();
+    const colourLegend = d3.select("#visualisation");
 
     colourLegend.append(() => Legend(
         color,
@@ -18,7 +13,7 @@ export function setupLegend(color) {
             tickFormat: "~s"
         }))
         .style("position", "absolute")
-        .style("top", "570px")
+        .style("top", "536px")
         .style("left", "20px")
         .style("background-color", "white");
 }
@@ -57,6 +52,7 @@ function Legend(color, {
         .attr("width", width)
         .attr("height", height)
         .attr("viewBox", [0, 0, width, height])
+        .attr("id", "legend")
         .style("overflow", "visible");
 
     let tickAdjust = g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height);
@@ -129,12 +125,12 @@ function Legend(color, {
             .attr("height", height - marginTop - marginBottom)
             .attr("fill", d => d)
             .on("mouseover", function (d, i) {
-                d3.selectAll("path.c" + i.substring(1)).attr("fill", "lightblue");
-                d3.select(this).attr("fill", "lightblue")
+                d3.selectAll("path.c" + i.substring(1)).attr("stroke", "black").raise();
+                d3.select(this).attr("stroke", "black")
             })
             .on("mouseout", function (d, i) {
-                d3.selectAll("path.c" + i.substring(1)).attr("fill", i);
-                d3.select(this).attr("fill", i);
+                d3.selectAll("path.c" + i.substring(1)).attr("stroke", "darkgrey");
+                d3.select(this).attr("stroke", "none");
             });
 
         tickValues = d3.range(thresholds.length);

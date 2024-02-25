@@ -1,5 +1,4 @@
 import * as d3 from "d3"
-import { setupLegend } from "./legend.js"
 import { showTooltip, hideTooltip } from "./tooltip.js"
 
 const SVG_WIDTH = 1000;
@@ -7,29 +6,27 @@ const SVG_HEIGHT = 600;
 
 const svg = d3.select("#visualisation").append("svg")
     .attr("width", SVG_WIDTH)
-    .attr("height", SVG_HEIGHT);
+    .attr("height", SVG_HEIGHT)
+    .attr("id", "map");
 
 const chart = svg.append("g").classed("chart", true);
 
 // this is what takes the coordinates of the countries borders and translates it onto a 2d plane using different cartographic methods
-export const projection = d3.geoNaturalEarth1();
+const projection = d3.geoNaturalEarth1();
 
 const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
 
+const thresholds = [10000, 100000, 500000, 1000000, 5000000, 10000000, 25000000, 50000000];
+
+const color = d3.scaleThreshold()
+    .domain(thresholds)
+    .range(d3.schemeYlOrBr[9]);
+
 export function resizeMap(geoJson) {
-    projection.fitExtent([[0, 0], [SVG_WIDTH, SVG_HEIGHT]], geoJson);
+    projection.fitExtent([[10, 0], [SVG_WIDTH - 10, SVG_HEIGHT - 50]], geoJson);
 }
 
-export function setupMap(coffeeData, countries, year) {
-
-    const thresholds = [10000, 100000, 500000, 1000000, 5000000, 10000000, 25000000, 50000000];
-
-    const color = d3.scaleThreshold()
-        .domain(thresholds)
-        .range(d3.schemeYlOrBr[9]);
-
-    setupLegend(color);
-
+export function setupMap(countries, year) {
     const paths = chart.selectAll("path")
         .data(countries) // that's the data points
         .join("path"); // create a new path for each country
@@ -46,6 +43,11 @@ export function setupMap(coffeeData, countries, year) {
         .on("mouseout", hideTooltip);
 
 }
+
+export function getColor() {
+    return color;
+}
+
 svg.call(d3.zoom()
     .extent([[0, 0], [SVG_WIDTH, SVG_HEIGHT]])
     .scaleExtent([1, 8])
@@ -54,3 +56,4 @@ svg.call(d3.zoom()
 function handleZoom(event) {
     chart.attr("transform", event.transform);
 }
+
