@@ -13,9 +13,9 @@ export function setupLegend(color) {
     colourLegend.append(() => Legend(
         color,
         {
-            title: "Coffee produced (in thousands of 60kg bags)",
+            title: "Coffee produced (in 60kg bags)",
             width: LEGEND_WIDTH,
-            tickFormat: ".0f"
+            tickFormat: "~s"
         }))
         .style("position", "absolute")
         .style("top", "570px")

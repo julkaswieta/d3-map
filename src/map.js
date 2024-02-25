@@ -21,10 +21,12 @@ export function resizeMap(geoJson) {
 }
 
 export function setupMap(coffeeData, countries, year) {
-    const color = d3.scaleQuantize([
-        d3.min(coffeeData, d => +d[year]),
-        d3.max(coffeeData, d => +d[year])
-    ], d3.schemeGreens[9]);
+
+    const thresholds = [10000, 100000, 500000, 1000000, 5000000, 10000000, 25000000, 50000000];
+
+    const color = d3.scaleThreshold()
+        .domain(thresholds)
+        .range(d3.schemeYlOrBr[9]);
 
     setupLegend(color);
 
@@ -35,11 +37,11 @@ export function setupMap(coffeeData, countries, year) {
     paths.attr("class", (d) => color(d.properties[year]) === undefined ? "" : "c" + color(d.properties[year]).substring(1))
         .classed("country", true)
         .attr("d", pathGenerator) // that's the actual coordinates of the path 
-        .attr("fill", d => color(d.properties[year]) ?? "#ccc")
-        .attr("stroke", "black")
-        //.append("title").text(d => d.properties.name + " " + d.properties[year]) // TODO: needs changed
+        .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
+        .attr("stroke", "darkgrey")
         .on("mouseover", function (e, i) {
             showTooltip(i, this, year);
+            d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
         })
         .on("mouseout", hideTooltip);
 

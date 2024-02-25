@@ -5,8 +5,8 @@
 } */
 
 .country:hover {
-    fill: lightsalmon;
-    stroke: salmon;
+    stroke-width: 2px;
+    stroke: black;
 }
 
 #tooltip-container {

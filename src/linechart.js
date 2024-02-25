@@ -22,7 +22,7 @@ export function createLineChart(
     const yearValues = cleanYearValues(years, values);
 
     const xScale = d3.scaleLinear([d3.min(years), d3.max(years)], [margin.left, width - margin.right]);
-    const yScale = d3.scaleLinear([d3.min(values), d3.max(values)], [height - margin.bottom, margin.top]);
+    const yScale = d3.scaleLinear([0, d3.max(values)], [height - margin.bottom, margin.top]);
 
     const lineGen = d3.line()
         .x(d => xScale(d.year))
