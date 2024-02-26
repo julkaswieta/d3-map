@@ -1,5 +1,6 @@
 import * as d3 from "d3"
 import { showTooltip, hideTooltip } from "./tooltip.js"
+import { setupZoom } from "./zoom.js";
 
 const SVG_WIDTH = 1000;
 const SVG_HEIGHT = 600;
@@ -9,7 +10,7 @@ const svg = d3.select("#visualisation").append("svg")
     .attr("height", SVG_HEIGHT)
     .attr("id", "map");
 
-const chart = svg.append("g").classed("chart", true);
+const chart = svg.append("g").attr("id", "chart");
 
 // this is what takes the coordinates of the countries borders and translates it onto a 2d plane using different cartographic methods
 const projection = d3.geoNaturalEarth1();
@@ -42,40 +43,12 @@ export function setupMap(countries, year) {
         })
         .on("mouseout", hideTooltip);
 
-    const zoom = d3.zoom()
-        .extent([[0, 0], [SVG_WIDTH, SVG_HEIGHT]])
-        .scaleExtent([1, 8])
-        .translateExtent([[-100, -100], [SVG_WIDTH + 100, SVG_HEIGHT + 100]])
-        .on("zoom", handleZoom);
+    const zoom = setupZoom(SVG_WIDTH, SVG_HEIGHT);
 
     svg.call(zoom);
-
-    setupResetButton(zoom);
 }
 
 export function getColor() {
     return color;
-}
-
-function handleZoom(event) {
-    chart.attr("transform", event.transform);
-    d3.select("#recentre").attr("hidden", null);
-}
-
-function setupResetButton(zoom) {
-    const button = d3.select("#visualisation")
-        .append("button")
-        .attr("id", "recentre")
-        .style("position", "absolute")
-        .style("top", "580px")
-        .style("left", "930px")
-        .attr("hidden", "hidden") // hide the button by default, activate after zoom or pan 
-        .text("Recentre")
-        .on("click", () => resetZoom(zoom))
-}
-
-function resetZoom(zoom) {
-    svg.call(zoom.transform, d3.zoomIdentity);
-    d3.select("#recentre").attr("hidden", "hidden");
 }
 

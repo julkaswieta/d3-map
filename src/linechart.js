@@ -34,7 +34,7 @@ export function createLineChart(
 
     chart.append("g")
         .attr("transform", `translate(${margin.left}, 0)`)
-        .call(d3.axisLeft(yScale).ticks(0).tickFormat(""));
+        .call(d3.axisLeft(yScale).ticks(0));
 
     chart.append("path")
         .attr("fill", "none")
