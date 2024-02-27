@@ -13,7 +13,7 @@ export function setupLegend(color) {
             tickFormat: "~s"
         }))
         .style("position", "absolute")
-        .style("top", "536px")
+        .style("top", "566px")
         .style("left", "20px")
         .style("background-color", "white");
 }

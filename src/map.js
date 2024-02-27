@@ -36,6 +36,7 @@ export function setupMap(countries, year) {
         .classed("country", true)
         .attr("d", pathGenerator) // that's the actual coordinates of the path 
         .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
+        .attr("name", d => d.properties.name)
         .attr("stroke", "darkgray")
         .on("mouseover", function (e, i) {
             showTooltip(i, this, year);
@@ -43,7 +44,7 @@ export function setupMap(countries, year) {
         })
         .on("mouseout", hideTooltip);
 
-    const zoom = setupZoom(SVG_WIDTH, SVG_HEIGHT);
+    const zoom = setupZoom(SVG_WIDTH, SVG_HEIGHT, pathGenerator);
 
     svg.call(zoom);
 }
