@@ -1,21 +1,21 @@
 import * as d3 from "d3"
+import { getOriginalSVGSize } from "./map";
 
 const LEGEND_WIDTH = 500;
 
 export function setupLegend(color) {
-    const colourLegend = d3.select("#visualisation");
+    const visualisation = d3.select("#visualisation");
+    const [width, height] = getOriginalSVGSize();
 
-    colourLegend.append(() => Legend(
+    visualisation.append(() => Legend(
         color,
         {
             title: "Coffee produced (in 60kg bags)",
             width: LEGEND_WIDTH,
             tickFormat: "~s"
         }))
-        .style("position", "absolute")
-        .style("top", "566px")
-        .style("left", "20px")
-        .style("background-color", "white");
+        .attr("x", 10)
+        .attr("y", height * 0.88);
 }
 
 // Copyright 2021, Observable Inc.
@@ -53,7 +53,7 @@ function Legend(color, {
         .attr("height", height)
         .attr("viewBox", [0, 0, width, height])
         .attr("id", "legend")
-        .style("overflow", "visible");
+        .style("overflow", "visible")
 
     let tickAdjust = g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height);
     let x;

@@ -1,9 +1,13 @@
 import * as d3 from "d3"
+import { getMapWidthHeight, getOriginalSVGSize, resizeMap } from "./map";
+import { library, icon } from '@fortawesome/fontawesome-svg-core'
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 const mapMargin = 100;
 
 let zoom;
 let zoomedRegion = null;
+let recentreGroup;
 
 export function setupZoom(width, height, pathGenerator) {
     zoom = d3.zoom()
@@ -19,25 +23,43 @@ export function setupZoom(width, height, pathGenerator) {
 }
 
 function handleZoom(transform) {
-    d3.select("#chart").attr("transform", transform);
-    d3.select("#recentre").attr("hidden", null);
+    d3.select("#map").attr("transform", transform);
 }
 
 function setupResetButton() {
-    d3.select("#visualisation")
-        .append("button")
-        .attr("id", "recentre")
-        .style("position", "absolute")
-        .style("top", "580px") // these should be changed to some vars
-        .style("left", "930px")
-        .attr("hidden", "hidden") // hide the button by default, activate after zoom or pan 
-        .text("Recentre")
-        .on("click", () => resetZoom())
+    const buttonSize = 25;
+    const margin = 5;
+
+    const [width, height] = getOriginalSVGSize();
+
+    recentreGroup = d3.select("#visualisation")
+        .append("g")
+        .attr("id", "recentre");
+
+    recentreGroup.append("circle")
+        .attr("r", buttonSize)
+        .attr("cx", width - buttonSize - margin)
+        .attr("cy", height - buttonSize - margin)
+        .attr("fill", "lightgrey")
+        .attr("stroke", "darkgray")
+        .on("click", () => resetZoom());
+
+    recentreGroup.append("svg")
+        .html(createRecentreIcon())
+        .attr("x", width / 2 - buttonSize - margin)
+        .attr("y", height / 2 - buttonSize - margin);
+}
+
+function createRecentreIcon() {
+    library.add(faRotateRight);
+    return icon(faRotateRight, {
+        transform:
+            { size: 1 }
+    }).html;
 }
 
 function resetZoom() {
-    d3.select("#map").call(zoom.transform, d3.zoomIdentity);
-    d3.select("#recentre").attr("hidden", "hidden");
+    d3.select("#visualisation").transition().duration(750).call(zoom.transform, d3.zoomIdentity);
     zoomedRegion = null;
 }
 
@@ -89,18 +111,14 @@ function setupRegionsZoom(pathGenerator) {
 function zoomToContinent(continent, pathGenerator) {
     if (zoomedRegion != continent) {
         zoomedRegion = continent;
+        resizeMap(); // this ensures that the zoom to region works when the window is resized 
         const countries = d3.selectAll("path.country");
         const boundingCountries = countries.filter(filters[continent]).data(); // data() gets the geoJSON objects 
-        const bounds = boundingCountries.map(d => pathGenerator.bounds(d))
+        const bounds = boundingCountries.map(d => pathGenerator.bounds(d));
 
-        const map = d3.select("#map").node().getBoundingClientRect(); // get size of the map
-        const width = map.width;
-        const height = map.height;
-
-        const [scale, translate] = calculateTransform(bounds, width, height);
-        const transform = new d3.ZoomTransform(scale, translate[0], translate[1]);
-        d3.select("#chart").transition().duration(750).attr("transform", transform);
-        d3.select("#recentre").attr("hidden", null);
+        const [scale, translate] = calculateTransform(bounds);
+        const transform = d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale);
+        d3.select("#visualisation").transition().duration(750).call(zoom.transform, transform);
     }
     else
         resetZoom();
@@ -141,7 +159,7 @@ const filters = {
             || d.properties.name == "Japan"
 }
 
-function calculateTransform(allBounds, width, height) {
+function calculateTransform(allBounds) {
     const margin = 20;
     const minXBound = d3.min(allBounds.map(d => d[0][0])) - margin;
     const minYBound = d3.min(allBounds.map(d => d[0][1])) - margin;
@@ -152,6 +170,9 @@ function calculateTransform(allBounds, width, height) {
     const boxHeight = maxYBound - minYBound;
     const x = (minXBound + maxXBound) / 2;
     const y = (minYBound + maxYBound) / 2;
+
+    let [width, height] = getMapWidthHeight();
+    height = height * 0.8;
 
     const scale = .9 / Math.max(boxWidth / width, boxHeight / height);
     const translate = [width / 2 - scale * x, height / 2 - scale * y];

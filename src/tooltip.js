@@ -16,7 +16,6 @@ export function createPopperInstance(element) {
 }
 
 export function showTooltip(countryData, targetElement, year) {
-    tooltip.innerHTML = ""; // Clean up the previous tooltip displayed
     tooltip.style.visibility = "visible";
 
     const canvas = select(tooltip);
@@ -67,6 +66,7 @@ export function showTooltip(countryData, targetElement, year) {
 
 export function hideTooltip() {
     tooltip.style.visibility = 'hidden';
+    tooltip.innerHTML = ""; // Clean up the previous tooltip displayed
     if (popperInstance) {
         popperInstance.destroy();
         popperInstance = null;

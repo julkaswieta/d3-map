@@ -1,21 +1,10 @@
 import * as d3 from "d3"
 import { showTooltip, hideTooltip } from "./tooltip.js"
 import { setupZoom } from "./zoom.js";
+import { getGeoJson } from "./main.js";
 
-const SVG_WIDTH = 1000;
-const SVG_HEIGHT = 600;
-
-const svg = d3.select("#visualisation").append("svg")
-    .attr("width", SVG_WIDTH)
-    .attr("height", SVG_HEIGHT)
-    .attr("id", "map");
-
-const chart = svg.append("g").attr("id", "chart");
-
-// this is what takes the coordinates of the countries borders and translates it onto a 2d plane using different cartographic methods
-const projection = d3.geoNaturalEarth1();
-
-const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
+const SVG_WIDTH = 800;
+const SVG_HEIGHT = 500;
 
 const thresholds = [10000, 100000, 500000, 1000000, 5000000, 10000000, 25000000, 50000000];
 
@@ -23,11 +12,25 @@ const color = d3.scaleThreshold()
     .domain(thresholds)
     .range(d3.schemeYlOrBr[9]);
 
-export function resizeMap(geoJson) {
-    projection.fitExtent([[10, 0], [SVG_WIDTH - 10, SVG_HEIGHT - 50]], geoJson);
+// this is what takes the coordinates of the countries borders and translates it onto a 2d plane using different cartographic methods
+const projection = d3.geoNaturalEarth1();
+
+export function resizeMap(defaultSize) {
+    let width, height;
+    if (!defaultSize)
+        [width, height] = getMapWidthHeight();
+    else {
+        width = SVG_WIDTH;
+        height = SVG_HEIGHT;
+    }
+    projection.fitExtent([[10, 0], [width - 10, height - 50]], getGeoJson());
 }
 
 export function setupMap(countries, year) {
+    const chart = d3.select("#visualisation").append("g").attr("id", "map");
+
+    const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
+
     const paths = chart.selectAll("path")
         .data(countries) // that's the data points
         .join("path"); // create a new path for each country
@@ -46,10 +49,22 @@ export function setupMap(countries, year) {
 
     const zoom = setupZoom(SVG_WIDTH, SVG_HEIGHT, pathGenerator);
 
-    svg.call(zoom);
+    d3.select("#visualisation").call(zoom);
 }
 
 export function getColor() {
     return color;
+}
+
+export function getOriginalSVGSize() {
+    return [SVG_WIDTH, SVG_HEIGHT];
+}
+
+export function getMapWidthHeight() {
+    const map = d3.select("#visualisation");
+    const mapSize = map.node().getBoundingClientRect(); // get size of the map
+    const width = mapSize.width;
+    const height = mapSize.height;
+    return [width, height];
 }
 
