@@ -24,3 +24,8 @@
     border-radius: 5px;
     padding: 2px;
 }
+
+.axis text,
+.slider text {
+    font-size: 14px;
+}

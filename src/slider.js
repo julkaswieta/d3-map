@@ -8,6 +8,14 @@ let sliderBox;
 export function setupSlider(countries, year) {
     const years = getYears(countries);
 
+    sliderBox = select("#slider-container")
+        .append("svg")
+        .attr("viewBox", [-20, -20, 800, 60])
+        .attr("width", 800)
+        .attr("height", 60)
+        .attr("style", "max-width: 100%; height: auto")
+        .attr("id", "sliderBox");
+
     slider.min(min(years))
         .max(max(years))
         .tickValues(years)
@@ -20,14 +28,18 @@ export function setupSlider(countries, year) {
             changeYear(year);
         })
 
-    sliderBox = select("#slider-container")
-        .append("svg")
-        .attr("viewBox", [-20, -20, 800, 60])
-        .attr("width", 800)
-        .attr("height", 60)
-        .attr("style", "max-width: 100%; height: auto");
-
     sliderBox.call(slider);
+    formatTicks();
+}
+
+function formatTicks() {
+    const ticks = select("g.axis").selectChildren("g.tick").selectChildren("text")
+    ticks.each(function () {
+        const year = +this.textContent;
+        if (year % 5 != 0) {
+            select(this).style("visibility", "hidden");
+        }
+    })
 }
 
 function getYears(countries) {
