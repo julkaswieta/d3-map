@@ -1,22 +1,38 @@
 import { sliderBottom } from "d3-simple-slider";
 import { format, max, min, select } from "d3";
+import { changeYear, setupMap } from "./map";
 
-export const slider = sliderBottom();
+const slider = sliderBottom();
+let sliderBox;
 
-export const sliderBox = select('#slider')
-    .append('svg')
-    .attr('width', 1100)
-    .attr('height', 100)
-    .append('g')
-    .attr('transform', 'translate(30,30)');
+export function setupSlider(countries, year) {
+    const years = getYears(countries);
 
-export function createSlider(yearsNumbers, year) {
-    return slider.min(min(yearsNumbers))
-        .max(max(yearsNumbers))
-        .tickValues(yearsNumbers)
+    slider.min(min(years))
+        .max(max(years))
+        .tickValues(years)
         .step(1)
-        .width(1000)
+        .width(750)
         .tickFormat(format("")) // removes the comma in thousands
-        .displayValue(true)
-        .default(year);
+        .default(year)
+        .on("onchange", function (val) {
+            year = val;
+            changeYear(year);
+        })
+
+    sliderBox = select("#slider-container")
+        .append("svg")
+        .attr("viewBox", [-20, -20, 800, 60])
+        .attr("width", 800)
+        .attr("height", 60)
+        .attr("style", "max-width: 100%; height: auto");
+
+    sliderBox.call(slider);
+}
+
+function getYears(countries) {
+    return Object.keys(
+        countries.filter(d => d.properties.name == "Brazil")[0].properties)
+        .filter(d => d != "name")
+        .map(d => +d);
 }

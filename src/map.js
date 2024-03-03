@@ -15,6 +15,8 @@ const color = d3.scaleThreshold()
 // this is what takes the coordinates of the countries borders and translates it onto a 2d plane using different cartographic methods
 const projection = d3.geoNaturalEarth1();
 
+const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
+
 export function resizeMap(defaultSize) {
     let width, height;
     if (!defaultSize)
@@ -28,9 +30,6 @@ export function resizeMap(defaultSize) {
 
 export function setupMap(countries, year) {
     const chart = d3.select("#visualisation").append("g").attr("id", "map");
-
-    const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
-
     const paths = chart.selectAll("path")
         .data(countries) // that's the data points
         .join("path"); // create a new path for each country
@@ -47,13 +46,21 @@ export function setupMap(countries, year) {
         })
         .on("mouseout", hideTooltip);
 
-    const zoom = setupZoom(SVG_WIDTH, SVG_HEIGHT, pathGenerator);
+    setupZoom();
+}
 
-    d3.select("#visualisation").call(zoom);
+export function changeYear(year) {
+    const paths = d3.select("#map").selectAll("path");
+    paths.attr("class", (d) => color(d.properties[year]) === undefined ? "" : "c" + color(d.properties[year]).substring(1))
+        .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
 }
 
 export function getColor() {
     return color;
+}
+
+export function getPathGenerator() {
+    return pathGenerator;
 }
 
 export function getOriginalSVGSize() {
