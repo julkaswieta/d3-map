@@ -63,6 +63,7 @@ function setupContainer() {
 export function changeYear(year) {
     const paths = d3.select("#map").selectAll("path");
     paths.attr("class", (d) => color(d.properties[year]) === undefined ? "" : "c" + color(d.properties[year]).substring(1))
+        .classed("country", true)
         .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
 
 }
