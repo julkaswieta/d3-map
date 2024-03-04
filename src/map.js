@@ -29,6 +29,7 @@ export function resizeMap(defaultSize) {
 }
 
 export function setupMap(countries, year) {
+    setupContainer();
     const chart = d3.select("#visualisation").append("g").attr("id", "map");
     const paths = chart.selectAll("path")
         .data(countries) // that's the data points
@@ -49,10 +50,21 @@ export function setupMap(countries, year) {
     setupZoom();
 }
 
+function setupContainer() {
+    d3.select("#visualisation-container")
+        .append("svg")
+        .attr("height", SVG_HEIGHT)
+        .attr("width", SVG_WIDTH)
+        .attr("viewBox", `0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`)
+        .attr("style", "max-width: 100%; height: auto")
+        .attr("id", "visualisation");
+}
+
 export function changeYear(year) {
     const paths = d3.select("#map").selectAll("path");
     paths.attr("class", (d) => color(d.properties[year]) === undefined ? "" : "c" + color(d.properties[year]).substring(1))
         .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
+
 }
 
 export function getColor() {

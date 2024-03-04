@@ -5,17 +5,10 @@ import { setupMap, resizeMap, getColor } from "./map.js";
 import { processCoffeeData } from "./data.js";
 import { setupLegend } from "./legend.js";
 import { setupZoomButtons } from "./zoom.js";
+import { setupSidePanel } from "./side-panel.js";
 
 let year = "2019";
 let geoJson;
-
-const visualisation = select("#visualisation-container")
-    .append("svg")
-    .attr("height", 500)
-    .attr("width", 800)
-    .attr("viewBox", `0 0 800 500`)
-    .attr("style", "max-width: 100%; height: auto")
-    .attr("id", "visualisation");
 
 csv("../data/production.csv").then(function (coffeeData) {
     json("../data/countries-110m.json").then(function (geoData) {
@@ -29,8 +22,13 @@ csv("../data/production.csv").then(function (coffeeData) {
         setupZoomButtons();
         setupLegend(getColor());
         setupSlider(countries, year);
+        setupSidePanel();
     })
 });
+
+export function reloadData(metric) {
+    console.log("Data reload " + metric);
+}
 
 export function getGeoJson() {
     return geoJson;

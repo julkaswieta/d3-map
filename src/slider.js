@@ -1,17 +1,18 @@
 import { sliderBottom } from "d3-simple-slider";
 import { format, max, min, select } from "d3";
-import { changeYear, setupMap } from "./map";
+import { changeYear, getOriginalSVGSize, setupMap } from "./map";
 
 const slider = sliderBottom();
 let sliderBox;
 
 export function setupSlider(countries, year) {
     const years = getYears(countries);
+    const [width, height] = getOriginalSVGSize();
 
     sliderBox = select("#slider-container")
         .append("svg")
-        .attr("viewBox", [-20, -20, 800, 60])
-        .attr("width", 800)
+        .attr("viewBox", [-20, -20, width, 60])
+        .attr("width", width)
         .attr("height", 60)
         .attr("style", "max-width: 100%; height: auto")
         .attr("id", "sliderBox");
@@ -20,7 +21,7 @@ export function setupSlider(countries, year) {
         .max(max(years))
         .tickValues(years)
         .step(1)
-        .width(750)
+        .width(0.95 * width)
         .tickFormat(format("")) // removes the comma in thousands
         .default(year)
         .on("onchange", function (val) {
