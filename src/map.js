@@ -65,7 +65,10 @@ export function changeYear(year) {
     paths.attr("class", (d) => color(d.properties[year]) === undefined ? "" : "c" + color(d.properties[year]).substring(1))
         .classed("country", true)
         .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
-
+        .on("mouseover", function (e, i) {
+            showTooltip(i, this, year);
+            d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
+        });
 }
 
 export function getColor() {
