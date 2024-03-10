@@ -44,8 +44,16 @@ function formatTicks() {
 }
 
 function getYears(countries) {
-    return Object.keys(
-        countries.filter(d => d.properties.name == "Brazil")[0].properties)
-        .filter(d => d != "name")
-        .map(d => +d);
+    const brazilProps = Object.keys(countries.filter(d => d.properties.name == "Brazil")[0].properties);
+    const italyProps = Object.keys(countries.filter(d => d.properties.name == "Italy")[0].properties);
+    if (brazilProps.length > 1) {
+        return brazilProps
+            .filter(d => d != "name")
+            .map(d => +d);
+    }
+    else {
+        return italyProps
+            .filter(d => d != "name")
+            .map(d => +d);
+    }
 }

@@ -1,18 +1,12 @@
 import * as d3 from "d3";
-import { getOriginalSVGSize } from "./map";
 import { reloadData } from "./main";
 import { sidePanel } from "./extra-text";
 
 const panelWidth = 300;
 
 export function setupSidePanel() {
-    const mapHeight = d3.select("#main-container").style("height");
-    const sidePanel = d3.select("#side-panel")
-        .style("height", mapHeight); // keep the height the same as map's
-
     setupHeader();
     setupButtons();
-
 }
 
 function setupHeader() {
@@ -30,6 +24,9 @@ function setupHeader() {
 
     const info = header.append("h3")
         .text("Please select one or two metrics to be displayed on the map: ")
+
+    d3.select("#side-panel")
+        .style("border-style", "solid");
 }
 
 function setupButtons() {

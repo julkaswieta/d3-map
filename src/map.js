@@ -28,9 +28,18 @@ export function resizeMap(defaultSize) {
     projection.fitExtent([[10, 0], [width - 10, height - 50]], getGeoJson());
 }
 
-export function setupMap(countries, year) {
+export function initEmptyMap(countries) {
     setupContainer();
     const chart = d3.select("#visualisation").append("g").attr("id", "map");
+    const paths = chart.selectAll("path")
+        .data(countries) // that's the data points
+        .join("path"); // create a new path for each country
+
+    setupZoom();
+}
+
+export function setupMap(countries, year) {
+    const chart = d3.select("#map");
     const paths = chart.selectAll("path")
         .data(countries) // that's the data points
         .join("path"); // create a new path for each country
@@ -46,8 +55,6 @@ export function setupMap(countries, year) {
             d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
         })
         .on("mouseout", hideTooltip);
-
-    setupZoom();
 }
 
 function setupContainer() {
