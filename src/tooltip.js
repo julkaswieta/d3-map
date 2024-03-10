@@ -1,6 +1,7 @@
 import { createPopper } from "@popperjs/core";
 import { select, format } from "d3";
 import { createLineChart } from "./linechart";
+import { getDatasetName } from "./main";
 
 const MARGIN = { top: 20, right: 10, left: 10, bottom: 20 };
 const TOOLTIP_WIDTH = 200;
@@ -42,20 +43,22 @@ export function showTooltip(countryData, targetElement, year) {
         .attr("transform", `translate(10, 40)`)
         .attr("width", TOOLTIP_WIDTH);
 
+    const currentDataset = getDatasetName();
+
     amount.append("text")
         .attr("x", 0)
         .attr("y", 0)
         .attr("height", 30)
-        .text((countryData.properties[year] === undefined) ? "No data" : format(",")(countryData.properties[year]) + " bags")
+        .text((countryData.properties[currentDataset] === undefined) ? "No data" : format(",")(countryData.properties[currentDataset][year]) + " bags")
         .style("word-wrap", "normal")
         .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right)
-        .attr("fill", (countryData.properties[year] === undefined) ? "black" : "red")
+        .attr("fill", (countryData.properties[currentDataset] === undefined) ? "black" : "red")
 
     const lineChart = svg.append("g")
         .attr("id", "linechart-container")
         .attr("transform", `translate(10, 40)`);
 
-    if (countryData.properties[year] !== undefined)
+    if (countryData.properties[currentDataset] !== undefined)
         createLineChart(countryData, year);
 
     if (popperInstance)

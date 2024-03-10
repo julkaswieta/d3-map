@@ -1,12 +1,14 @@
 import { sliderBottom } from "d3-simple-slider";
 import { format, max, min, select } from "d3";
-import { changeYear, getOriginalSVGSize, setupMap } from "./map";
+import { displayDataset, getOriginalSVGSize } from "./map";
+import { getYears } from "./data";
+import { getDatasetName } from "./main";
 
 const slider = sliderBottom();
 let sliderBox;
 
-export function setupSlider(countries, year) {
-    const years = getYears(countries);
+export function setupSlider(year) {
+    const years = getYears();
     const [width, height] = getOriginalSVGSize();
 
     sliderBox = select("#slider-container")
@@ -26,7 +28,7 @@ export function setupSlider(countries, year) {
         .default(year)
         .on("onchange", function (val) {
             year = val;
-            changeYear(year);
+            displayDataset(getDatasetName(), year);
         })
 
     sliderBox.call(slider);
@@ -41,19 +43,4 @@ function formatTicks() {
             select(this).style("visibility", "hidden");
         }
     })
-}
-
-function getYears(countries) {
-    const brazilProps = Object.keys(countries.filter(d => d.properties.name == "Brazil")[0].properties);
-    const italyProps = Object.keys(countries.filter(d => d.properties.name == "Italy")[0].properties);
-    if (brazilProps.length > 1) {
-        return brazilProps
-            .filter(d => d != "name")
-            .map(d => +d);
-    }
-    else {
-        return italyProps
-            .filter(d => d != "name")
-            .map(d => +d);
-    }
 }
