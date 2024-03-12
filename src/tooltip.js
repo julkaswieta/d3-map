@@ -1,7 +1,7 @@
 import { createPopper } from "@popperjs/core";
 import { select, format } from "d3";
 import { createLineChart } from "./linechart";
-import { getDatasets } from "./main";
+import { getDatasets } from "./datasets";
 
 const MARGIN = { top: 20, right: 10, left: 10, bottom: 20 };
 const TOOLTIP_WIDTH = 200;

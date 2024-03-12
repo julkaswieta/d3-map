@@ -1,5 +1,5 @@
 import * as d3 from "d3"
-import { getDatasets } from "./main";
+import { getDatasets } from "./datasets";
 
 export function createLineChart(
     countryData,

@@ -1,8 +1,9 @@
 import * as d3 from "d3"
 import { showTooltip, hideTooltip } from "./tooltip.js"
 import { setupZoom } from "./zoom.js";
-import { getGeoJson } from "./data.js";
-import { getDatasets, getYear, addDataset } from "./main.js";
+import { getCountryData, getGeoJson } from "./data.js";
+import { getYear } from "./main.js";
+import { getDatasets } from "./datasets.js";
 
 const SVG_WIDTH = 800;
 const SVG_HEIGHT = 500;
@@ -29,7 +30,8 @@ export function resizeMap(defaultSize) {
     projection.fitExtent([[10, 0], [width - 10, height - 50]], getGeoJson());
 }
 
-export function initialiseMap(countries) {
+export function initialiseMap() {
+    const countries = getCountryData();
     setupContainer();
     const chart = d3.select("#visualisation").append("g").attr("id", "map");
     chart.selectAll("path")
@@ -41,8 +43,6 @@ export function initialiseMap(countries) {
 }
 
 export function displayDatasets() {
-    const datasets = getDatasets();
-    console.log(datasets)
     const year = getYear();
     const paths = d3.select("#map").selectChildren("path");
 

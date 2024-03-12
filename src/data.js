@@ -30,12 +30,12 @@ async function loadData() {
     for (let i = 0; i < datasets.length; i++) {
         const path = "../data/" + datasets[i] + ".csv";
         await csv(path).then(function (coffeeData) {
-            addDataset(coffeeData, countryData, datasets[i]);
+            processDataset(coffeeData, countryData, datasets[i]);
         });
     }
 }
 
-export function addDataset(coffeeData, geoJSON, dataset) {
+function processDataset(coffeeData, geoJSON, dataset) {
     // for each coffee country
     for (let i = 0; i < coffeeData.length; i++) {
         let coffeeCountry = coffeeData[i].Country;

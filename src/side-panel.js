@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { sidePanel } from "./extra-text";
 import { displayDatasets } from "./map";
-import { addDataset, removeDataset } from "./main";
+import { addDataset, removeDataset } from "./datasets";
 
 const panelWidth = 300;
 
