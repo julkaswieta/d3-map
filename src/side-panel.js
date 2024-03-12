@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { sidePanel } from "./extra-text";
-import { displayDataset } from "./map";
-import { getYear } from "./main";
+import { displayDatasets } from "./map";
+import { addDataset, removeDataset } from "./main";
 
 const panelWidth = 300;
 
@@ -41,11 +41,29 @@ function setupButtons() {
     for (let i = 0; i < 4; i++) {
         buttonGroup.append("button")
             .text(buttonLabels[i])
-            .attr("class", "metric-choice")
+            .attr("class", "dataset-choice")
+            .classed("unclicked", true)
             .on("click", function () {
-                displayDataset(buttonLabels[i]);
-                changeText(buttonLabels[i])
+                datasetOnClick(d3.select(this), buttonLabels[i]);
             });
+    }
+}
+
+function datasetOnClick(button, dataset) {
+    if (button.classed("unclicked")) {
+        const canAddNew = addDataset(dataset);
+        if (canAddNew) {
+            displayDatasets();
+            changeText(dataset)
+            button.classed("unclicked", false)
+            button.classed("clicked", true);
+        }
+    }
+    else {
+        removeDataset(dataset);
+        displayDatasets();
+        button.classed("unclicked", true);
+        button.classed("clicked", false);
     }
 }
 

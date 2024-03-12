@@ -2,7 +2,7 @@ import * as d3 from "d3"
 import { showTooltip, hideTooltip } from "./tooltip.js"
 import { setupZoom } from "./zoom.js";
 import { getGeoJson } from "./data.js";
-import { getDatasets, getYear, updateDatasets } from "./main.js";
+import { getDatasets, getYear, addDataset } from "./main.js";
 
 const SVG_WIDTH = 800;
 const SVG_HEIGHT = 500;
@@ -29,10 +29,10 @@ export function resizeMap(defaultSize) {
     projection.fitExtent([[10, 0], [width - 10, height - 50]], getGeoJson());
 }
 
-export function initialiseMap(countries, year) {
+export function initialiseMap(countries) {
     setupContainer();
     const chart = d3.select("#visualisation").append("g").attr("id", "map");
-    const paths = chart.selectAll("path")
+    chart.selectAll("path")
         .data(countries) // that's the data points
         .join("path") // create a new path for each country
         .attr("d", pathGenerator) // that's the actual coordinates of the path
@@ -42,13 +42,14 @@ export function initialiseMap(countries, year) {
 
 export function displayDatasets() {
     const datasets = getDatasets();
+    console.log(datasets)
     const year = getYear();
     const paths = d3.select("#map").selectChildren("path");
 
-    paths.attr("class", (d) => colourClass(d, year))
+    paths.attr("class", d => colourClass(d, year))
         .classed("country", true)
         .attr("d", pathGenerator) // that's the actual coordinates of the path 
-        .attr("fill", d => d.properties[dataset] === undefined ? "#e8e6e6" : color(d.properties[dataset][year]))
+        .attr("fill", d => fillColour(d, year))
         .attr("name", d => d.properties.name)
         .attr("stroke", "darkgray")
         .on("mouseover", function (e, i) {
@@ -56,6 +57,16 @@ export function displayDatasets() {
             d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
         })
         .on("mouseout", hideTooltip);
+}
+
+function fillColour(d, year) {
+    const datasets = getDatasets();
+    if (d.properties[datasets[0]] !== undefined)
+        return color(d.properties[datasets[0]][year]);
+    else if (d.properties[datasets[1]] !== undefined)
+        return color(d.properties[datasets[1]][year]);
+    else
+        return "#e8e6e6";
 }
 
 function colourClass(d, year) {
@@ -66,47 +77,6 @@ function colourClass(d, year) {
         return "c" + color(d.properties[datasets[1]][year]).substring(1)
     else
         return "";
-}
-
-export function displayDataset(dataset) {
-    dataset = dataset.toLowerCase();
-    const year = getYear();
-    updateDatasets(dataset);
-    const paths = d3.select("#map").selectChildren("path");
-    paths.attr("class", function (d) {
-        return d.properties[dataset] !== undefined
-            ? "c" + color(d.properties[dataset][year]).substring(1)
-            : d.properties[dataset]
-    })
-        .classed("country", true)
-        .attr("d", pathGenerator) // that's the actual coordinates of the path 
-        .attr("fill", d => d.properties[dataset] === undefined ? "#e8e6e6" : color(d.properties[dataset][year]))
-        .attr("name", d => d.properties.name)
-        .attr("stroke", "darkgray")
-        .on("mouseover", function (e, i) {
-            showTooltip(i, this, year);
-            d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
-        })
-        .on("mouseout", hideTooltip);
-}
-
-export function setupMap(countries, year) {
-    const chart = d3.select("#map");
-    const paths = chart.selectAll("path")
-        .data(countries) // that's the data points
-        .join("path"); // create a new path for each country
-
-    paths.attr("class", (d) => color(d.properties[year]) === undefined ? "" : "c" + color(d.properties[year]).substring(1))
-        .classed("country", true)
-        .attr("d", pathGenerator) // that's the actual coordinates of the path 
-        .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
-        .attr("name", d => d.properties.name)
-        .attr("stroke", "darkgray")
-        .on("mouseover", function (e, i) {
-            showTooltip(i, this, year);
-            d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
-        })
-        .on("mouseout", hideTooltip);
 }
 
 function setupContainer() {

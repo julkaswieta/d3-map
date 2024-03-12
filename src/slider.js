@@ -1,8 +1,8 @@
 import { sliderBottom } from "d3-simple-slider";
 import { format, max, min, select } from "d3";
-import { displayDataset, getOriginalSVGSize } from "./map";
+import { displayDatasets, getOriginalSVGSize } from "./map";
 import { getYears } from "./data";
-import { getDatasets, getYear, updateYear } from "./main";
+import { getYear, updateYear } from "./main";
 
 const slider = sliderBottom();
 let sliderBox;
@@ -30,8 +30,7 @@ export function setupSlider() {
         .on("onchange", function (val) {
             year = val;
             updateYear(year);
-            const datasets = getDatasets();
-            displayDataset(datasets[0]);
+            displayDatasets();
         })
 
     sliderBox.call(slider);

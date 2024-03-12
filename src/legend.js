@@ -1,11 +1,12 @@
 import * as d3 from "d3"
-import { getOriginalSVGSize } from "./map";
+import { getColor, getOriginalSVGSize } from "./map";
 
 const LEGEND_WIDTH = 500;
 
-export function setupLegend(color) {
+export function setupLegend() {
+    const color = getColor();
     const visualisation = d3.select("#visualisation");
-    const [width, height] = getOriginalSVGSize();
+    const [, height] = getOriginalSVGSize();
 
     visualisation.append(() => Legend(
         color,
