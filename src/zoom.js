@@ -75,45 +75,69 @@ function setupRegionsZoom() {
         .style("margin-right", "10px");
 
     const northAmerica = container.append("button")
-        .attr("id", "north-america")
+        .attr("id", "northAmerica")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
         .text("North America")
         .style("margin-right", "10px")
         .on("click", d => zoomToContinent("northAmerica"));
 
     const southAmerica = container.append("button")
-        .attr("id", "south-america")
+        .attr("id", "southAmerica")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
         .text("South America")
         .style("margin-right", "10px")
         .on("click", d => zoomToContinent("southAmerica"));
 
     const africa = container.append("button")
         .attr("id", "africa")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
         .text("Africa")
         .style("margin-right", "10px")
         .on("click", d => zoomToContinent("africa"));
 
     const europe = container.append("button")
         .attr("id", "europe")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
         .text("Europe")
         .style("margin-right", "10px")
         .on("click", d => zoomToContinent("europe"));
 
     const asia = container.append("button")
         .attr("id", "asia")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
         .text("Asia")
         .style("margin-right", "10px")
         .on("click", d => zoomToContinent("asia"));
 
     const oceania = container.append("button")
         .attr("id", "oceania")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
         .text("Oceania")
         .style("margin-right", "10px")
         .on("click", d => zoomToContinent("oceania"));
 }
 
+function styleButton(selected, zoomIn) {
+    console.log(selected)
+    d3.selectAll(".continent-zoom")
+        .classed("unclicked", true)
+        .classed("clicked", false);
+    if (zoomIn)
+        d3.select("#" + selected)
+            .classed("unclicked", false)
+            .classed("clicked", true);
+}
+
 function zoomToContinent(continent) {
     if (zoomedRegion != continent) {
         zoomedRegion = continent;
+        styleButton(continent, true);
         resizeMap(); // this ensures that the zoom to region works when the window is resized 
         const countries = d3.selectAll("path.country");
         const boundingCountries = countries.filter(filters[continent]).data(); // data() gets the geoJSON objects 
@@ -124,8 +148,10 @@ function zoomToContinent(continent) {
         const transform = d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale);
         d3.select("#visualisation").transition().duration(750).call(zoom.transform, transform);
     }
-    else
+    else {
+        styleButton(continent, false)
         resetZoom();
+    }
 }
 
 const filters = {
