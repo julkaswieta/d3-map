@@ -1,7 +1,7 @@
 import { createPopper } from "@popperjs/core";
 import { select, format } from "d3";
 import { createLineChart } from "./linechart";
-import { getDatasetName } from "./main";
+import { getDatasets } from "./main";
 
 const MARGIN = { top: 20, right: 10, left: 10, bottom: 20 };
 const TOOLTIP_WIDTH = 200;
@@ -43,7 +43,7 @@ export function showTooltip(countryData, targetElement, year) {
         .attr("transform", `translate(10, 40)`)
         .attr("width", TOOLTIP_WIDTH);
 
-    const currentDataset = getDatasetName();
+    const currentDataset = getDatasets()[0];
 
     amount.append("text")
         .attr("x", 0)

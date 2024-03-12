@@ -1,5 +1,5 @@
 import * as d3 from "d3"
-import { getDatasetName } from "./main";
+import { getDatasets } from "./main";
 
 export function createLineChart(
     countryData,
@@ -17,7 +17,7 @@ export function createLineChart(
         .attr("height", height)
         .attr("viewBox", [0, 0, width, height]);
 
-    const dataset = getDatasetName();
+    const dataset = getDatasets();
 
     const years = extractYears(countryData, dataset);
     const values = extractValues(countryData, dataset);

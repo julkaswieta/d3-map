@@ -6,7 +6,7 @@ import { setupZoomButtons } from "./zoom.js";
 import { setupSidePanel } from "./side-panel.js";
 
 let year = "2019";
-let dataset = "production";
+let datasets = ["production"];
 
 await initialise();
 
@@ -15,9 +15,9 @@ async function initialise() {
     const countryData = getCountryData();
     resizeMap(true);
     initialiseMap(countryData, year);
-    displayDataset(dataset, year);
+    displayDataset(datasets[0]);
     setupSidePanel();
-    setupSlider(year);
+    setupSlider();
     setupZoomButtons();
     setupLegend(getColor());
 }
@@ -26,10 +26,24 @@ export function reloadData(metric) {
     console.log("Data reload " + metric);
 }
 
-export function getGeoJson() {
-    return geoJson;
+export function getDatasets() {
+    return datasets;
 }
 
-export function getDatasetName() {
-    return dataset;
+export function getYear() {
+    return year;
+}
+
+export function updateDatasets(dataset) {
+    if (datasets.length < 2) {
+        for (let i = 0; i < datasets.length; i++)
+            if (datasets[i] == dataset)
+                return;
+        datasets.push(dataset);
+    }
+}
+
+export function updateYear(newYear) {
+    year = newYear;
+    console.log(year)
 }

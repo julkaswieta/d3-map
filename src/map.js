@@ -2,6 +2,7 @@ import * as d3 from "d3"
 import { showTooltip, hideTooltip } from "./tooltip.js"
 import { setupZoom } from "./zoom.js";
 import { getGeoJson } from "./data.js";
+import { getDatasets, getYear, updateDatasets } from "./main.js";
 
 const SVG_WIDTH = 800;
 const SVG_HEIGHT = 500;
@@ -39,10 +40,44 @@ export function initialiseMap(countries, year) {
     setupZoom();
 }
 
-export function displayDataset(dataset, year) {
-    console.log(d3.selectAll("path").data())
+export function displayDatasets() {
+    const datasets = getDatasets();
+    const year = getYear();
     const paths = d3.select("#map").selectChildren("path");
-    paths.attr("class", (d) => color(d.properties[dataset]) === undefined ? "" : ("c" + color(d.properties[dataset][year]).substring(1)))
+
+    paths.attr("class", (d) => colourClass(d, year))
+        .classed("country", true)
+        .attr("d", pathGenerator) // that's the actual coordinates of the path 
+        .attr("fill", d => d.properties[dataset] === undefined ? "#e8e6e6" : color(d.properties[dataset][year]))
+        .attr("name", d => d.properties.name)
+        .attr("stroke", "darkgray")
+        .on("mouseover", function (e, i) {
+            showTooltip(i, this, year);
+            d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
+        })
+        .on("mouseout", hideTooltip);
+}
+
+function colourClass(d, year) {
+    const datasets = getDatasets();
+    if (d.properties[datasets[0]] !== undefined)
+        return "c" + color(d.properties[datasets[0]][year]).substring(1)
+    else if (d.properties[datasets[1]] !== undefined)
+        return "c" + color(d.properties[datasets[1]][year]).substring(1)
+    else
+        return "";
+}
+
+export function displayDataset(dataset) {
+    dataset = dataset.toLowerCase();
+    const year = getYear();
+    updateDatasets(dataset);
+    const paths = d3.select("#map").selectChildren("path");
+    paths.attr("class", function (d) {
+        return d.properties[dataset] !== undefined
+            ? "c" + color(d.properties[dataset][year]).substring(1)
+            : d.properties[dataset]
+    })
         .classed("country", true)
         .attr("d", pathGenerator) // that's the actual coordinates of the path 
         .attr("fill", d => d.properties[dataset] === undefined ? "#e8e6e6" : color(d.properties[dataset][year]))

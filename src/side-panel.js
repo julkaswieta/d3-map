@@ -1,6 +1,7 @@
 import * as d3 from "d3";
-import { reloadData } from "./main";
 import { sidePanel } from "./extra-text";
+import { displayDataset } from "./map";
+import { getYear } from "./main";
 
 const panelWidth = 300;
 
@@ -42,7 +43,7 @@ function setupButtons() {
             .text(buttonLabels[i])
             .attr("class", "metric-choice")
             .on("click", function () {
-                reloadData(buttonLabels[i]);
+                displayDataset(buttonLabels[i]);
                 changeText(buttonLabels[i])
             });
     }
