@@ -53,7 +53,7 @@ export function displayDatasets() {
         .attr("name", d => d.properties.name)
         .attr("stroke", "darkgray")
         .on("mouseover", function (e, i) {
-            showTooltip(i, this, year);
+            showTooltip(i, this);
             d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
         })
         .on("mouseout", hideTooltip);
@@ -95,7 +95,7 @@ export function changeYear(year) {
         .classed("country", true)
         .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
         .on("mouseover", function (e, i) {
-            showTooltip(i, this, year);
+            showTooltip(i, this);
             d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
         });
 }

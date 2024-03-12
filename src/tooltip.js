@@ -2,13 +2,17 @@ import { createPopper } from "@popperjs/core";
 import { select, format } from "d3";
 import { createLineChart } from "./linechart";
 import { getDatasets } from "./datasets";
+import { getYear } from "./main";
 
 const MARGIN = { top: 20, right: 10, left: 10, bottom: 20 };
-const TOOLTIP_WIDTH = 200;
+const TOOLTIP_WIDTH = 250;
 const TOOLTIP_HEIGHT = 150;
 
 const tooltip = document.querySelector("#tooltip");
 let popperInstance = null;
+
+let country;
+let year;
 
 export function createPopperInstance(element) {
     popperInstance = createPopper(element, tooltip, {
@@ -16,7 +20,9 @@ export function createPopperInstance(element) {
     });
 }
 
-export function showTooltip(countryData, targetElement, year) {
+export function showTooltip(countryData, targetElement) {
+    country = countryData;
+    year = getYear();
     tooltip.style.visibility = "visible";
 
     const canvas = select(tooltip);
@@ -34,37 +40,84 @@ export function showTooltip(countryData, targetElement, year) {
     countryName.append("text")
         .attr("x", 0)
         .attr("y", 0)
-        .attr("height", 30)
-        .text(countryData.properties.name)
+        .text(country.properties.name)
         .style("word-wrap", "normal")
         .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right)
 
-    const amount = svg.append("g")
+    const amounts = svg.append("g")
         .attr("transform", `translate(10, 40)`)
-        .attr("width", TOOLTIP_WIDTH);
+        .attr("width", TOOLTIP_WIDTH)
+        .attr("id", "amounts");
 
-    const currentDataset = getDatasets()[0];
-
-    amount.append("text")
+    const text1 = amounts.append("text")
         .attr("x", 0)
         .attr("y", 0)
-        .attr("height", 30)
-        .text((countryData.properties[currentDataset] === undefined) ? "No data" : format(",")(countryData.properties[currentDataset][year]) + " bags")
+        .attr("id", "amount-1")
         .style("word-wrap", "normal")
-        .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right)
-        .attr("fill", (countryData.properties[currentDataset] === undefined) ? "black" : "red")
+        .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
+
+    addAmountText();
 
     const lineChart = svg.append("g")
         .attr("id", "linechart-container")
         .attr("transform", `translate(10, 40)`);
 
-    if (countryData.properties[currentDataset] !== undefined)
-        createLineChart(countryData, year);
+    // if (country.properties[datasets[0]] !== undefined)
+    //     createLineChart(country, year);
 
     if (popperInstance)
         popperInstance.destroy();
 
     createPopperInstance(targetElement);
+}
+
+function addAmountText() {
+    const datasets = getDatasets();
+
+    const ds1Exists = country.properties[datasets[0]] !== undefined;
+    const ds2exists = country.properties[datasets[1]] !== undefined;
+
+    const text1 = select("#amount-1");
+
+    if (ds1Exists) {
+        displayDatasetAmount(datasets[0], text1);
+
+        if (ds2exists) {
+            const text2 = select("#amounts").append("text")
+                .attr("x", 0)
+                .attr("y", 20)
+                .style("word-wrap", "normal")
+                .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
+
+            displayDatasetAmount(datasets[1], text2);
+        }
+    }
+    else {
+        if (ds2exists) {
+            displayDatasetAmount(datasets[1], text1)
+        }
+        else {
+            text1.text("No data");
+            text1.attr("fill", "black");
+        }
+    }
+}
+
+function convertDatasetName(dataset) {
+    return dataset.charAt(0).toUpperCase() + dataset.slice(1);
+}
+
+function displayDatasetAmount(dataset, element) {
+    if (country.properties[dataset][year] !== undefined) {
+        const datasetName = convertDatasetName(dataset);
+        const datasetAmount = format(",")(country.properties[dataset][year]) + " bags";
+        element.text(datasetName + ": " + datasetAmount);
+        element.attr("fill", "red");
+    }
+    else {
+        element.text("No " + dataset + " data");
+        element.attr("fill", "black");
+    }
 }
 
 export function hideTooltip() {

@@ -18,7 +18,5 @@ export function addDataset(dataset) {
 
 export function removeDataset(dataset) {
     dataset = dataset.toLowerCase();
-    console.log(datasets)
     datasets = datasets.filter(d => d != dataset);
-    console.log(datasets)
 }
