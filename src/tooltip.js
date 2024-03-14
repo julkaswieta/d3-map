@@ -43,7 +43,7 @@ function arrangeTooltipElements() {
 
     addAmounts(datasets, ds1Exists, ds2Exists);
 
-    const lineChart = svg.append("g")
+    svg.append("g")
         .attr("id", "linechart-container")
         .attr("transform", `translate(10, 50)`);
 
@@ -52,7 +52,8 @@ function arrangeTooltipElements() {
 }
 
 function addCountryName() {
-    const countryName = select("#tooltip-container").append("g")
+    const countryName = select("#tooltip-container")
+        .append("g")
         .attr("transform", `translate(${MARGIN.left}, ${MARGIN.top})`)
         .attr("width", TOOLTIP_WIDTH);
 
@@ -61,16 +62,17 @@ function addCountryName() {
         .attr("y", 0)
         .text(country.properties.name)
         .style("word-wrap", "normal")
-        .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right)
+        .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
 }
 
 function addAmounts(datasets, ds1Exists, ds2Exists) {
-    const amounts = select("#tooltip-container").append("g")
+    const amounts = select("#tooltip-container")
+        .append("g")
         .attr("transform", `translate(10, 40)`)
         .attr("width", TOOLTIP_WIDTH)
         .attr("id", "amounts");
 
-    const text1 = amounts.append("text")
+    amounts.append("text")
         .attr("x", 0)
         .attr("y", 0)
         .attr("id", "amount-1")
@@ -87,7 +89,8 @@ function addAmountText(datasets, ds1Exists, ds2Exists) {
         displayDatasetAmount(datasets[0], text1, "steelblue");
 
         if (ds2Exists) {
-            const text2 = select("#amounts").append("text")
+            const text2 = select("#amounts")
+                .append("text")
                 .attr("x", 0)
                 .attr("y", 20)
                 .style("word-wrap", "normal")
@@ -98,12 +101,14 @@ function addAmountText(datasets, ds1Exists, ds2Exists) {
     }
     else {
         if (ds2Exists) {
-            displayDatasetAmount(datasets[1], text1, "steelblue")
+            displayDatasetAmount(datasets[1], text1, "steelblue");
         }
         else {
             text1.text("No data");
             text1.attr("fill", "black");
-            select("#tooltip-container").attr("height", 100).attr("width", 200);
+            select("#tooltip-container")
+                .attr("height", 100)
+                .attr("width", 200);
         }
     }
 }
@@ -132,7 +137,7 @@ function createPopperInstance(element) {
 }
 
 export function hideTooltip() {
-    tooltip.style.visibility = 'hidden';
+    tooltip.style.visibility = "hidden";
     tooltip.innerHTML = ""; // Clean up the previous tooltip displayed
     if (popperInstance) {
         popperInstance.destroy();

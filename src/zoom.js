@@ -1,6 +1,6 @@
-import * as d3 from "d3"
+import * as d3 from "d3";
 import { getMapWidthHeight, getOriginalSVGSize, getPathGenerator, resizeMap } from "./map";
-import { library, icon } from '@fortawesome/fontawesome-svg-core'
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 const mapMargin = 100;
@@ -62,7 +62,10 @@ function createRecentreIcon() {
 }
 
 function resetZoom() {
-    d3.select("#visualisation").transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+    d3.select("#visualisation")
+        .transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity);
     zoomedRegion = null;
 }
 
@@ -70,61 +73,60 @@ function setupRegionsZoom() {
     const container = d3.select("#regionZoom")
         .style("margin", "10px");
 
-    const tag = container.append("text")
+    container.append("text")
         .text("Zoom to region: ")
         .style("margin-right", "10px");
 
-    const northAmerica = container.append("button")
+    container.append("button")
         .attr("id", "northAmerica")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("North America")
         .style("margin-right", "10px")
-        .on("click", d => zoomToContinent("northAmerica"));
+        .on("click", () => zoomToContinent("northAmerica"));
 
-    const southAmerica = container.append("button")
+    container.append("button")
         .attr("id", "southAmerica")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("South America")
         .style("margin-right", "10px")
-        .on("click", d => zoomToContinent("southAmerica"));
+        .on("click", () => zoomToContinent("southAmerica"));
 
-    const africa = container.append("button")
+    container.append("button")
         .attr("id", "africa")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("Africa")
         .style("margin-right", "10px")
-        .on("click", d => zoomToContinent("africa"));
+        .on("click", () => zoomToContinent("africa"));
 
-    const europe = container.append("button")
+    container.append("button")
         .attr("id", "europe")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("Europe")
         .style("margin-right", "10px")
-        .on("click", d => zoomToContinent("europe"));
+        .on("click", () => zoomToContinent("europe"));
 
-    const asia = container.append("button")
+    container.append("button")
         .attr("id", "asia")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("Asia")
         .style("margin-right", "10px")
-        .on("click", d => zoomToContinent("asia"));
+        .on("click", () => zoomToContinent("asia"));
 
-    const oceania = container.append("button")
+    container.append("button")
         .attr("id", "oceania")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("Oceania")
         .style("margin-right", "10px")
-        .on("click", d => zoomToContinent("oceania"));
+        .on("click", () => zoomToContinent("oceania"));
 }
 
 function styleButton(selected, zoomIn) {
-    console.log(selected)
     d3.selectAll(".continent-zoom")
         .classed("unclicked", true)
         .classed("clicked", false);
@@ -140,16 +142,22 @@ function zoomToContinent(continent) {
         styleButton(continent, true);
         resizeMap(); // this ensures that the zoom to region works when the window is resized 
         const countries = d3.selectAll("path.country");
-        const boundingCountries = countries.filter(filters[continent]).data(); // data() gets the geoJSON objects 
+        const boundingCountries = countries.filter(filters[continent])
+            .data(); // data() gets the geoJSON objects 
         const pathGenerator = getPathGenerator();
         const bounds = boundingCountries.map(d => pathGenerator.bounds(d));
 
         const [scale, translate] = calculateTransform(bounds);
-        const transform = d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale);
-        d3.select("#visualisation").transition().duration(750).call(zoom.transform, transform);
+        const transform = d3.zoomIdentity
+            .translate(translate[0], translate[1])
+            .scale(scale);
+        d3.select("#visualisation")
+            .transition()
+            .duration(750)
+            .call(zoom.transform, transform);
     }
     else {
-        styleButton(continent, false)
+        styleButton(continent, false);
         resetZoom();
     }
 }
@@ -187,7 +195,7 @@ const filters = {
         (d) => d.properties.name == "Finland"
             || d.properties.name == "Malaysia"
             || d.properties.name == "Japan"
-}
+};
 
 function calculateTransform(allBounds) {
     const margin = 20;

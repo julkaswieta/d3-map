@@ -1,4 +1,4 @@
-import * as d3 from "d3"
+import * as d3 from "d3";
 import { getDatasets } from "./datasets";
 import { getYear } from "./main";
 
@@ -18,10 +18,10 @@ export function createLineChart(countryData) {
 
     initLineChart(ds1Exists, ds2Exists);
     if (ds1Exists) {
-        addDatasetToChart(datasets[0], "steelblue")
+        addDatasetToChart(datasets[0], "steelblue");
     }
     if (ds2Exists) {
-        addDatasetToChart(datasets[1], "navy")
+        addDatasetToChart(datasets[1], "navy");
     }
 }
 
@@ -67,8 +67,7 @@ function getMinMax(ds1Exists, ds2Exists) {
     if (ds1Exists && ds2Exists)
         return compareMinMaxValues(d1, d2);
     else
-        return (d1.minYear != undefined
-            && d1.minYear != NaN)
+        return (d1.minYear != undefined && !isNaN(d1.minYear))
             ? d1
             : d2;
 }
@@ -113,7 +112,8 @@ function addDatasetToChart(dataset, strokeColour) {
     const values = extractValues(dataset);
     const yearValues = cleanYearValues(years, values);
 
-    d3.select("#linechart").append("path")
+    d3.select("#linechart")
+        .append("path")
         .attr("fill", "none")
         .attr("stroke", strokeColour)
         .attr("stroke-width", 1.5)
@@ -135,7 +135,8 @@ function cleanYearValues(years, values) {
 function addDataPoint(yearValues) {
     const dataPoint = yearValues.filter(d => d.year == year)[0];
 
-    d3.select("#linechart").append("circle")
+    d3.select("#linechart")
+        .append("circle")
         .attr("fill", "black")
         .attr("cx", xScale(dataPoint.year))
         .attr("cy", yScale(dataPoint.value))

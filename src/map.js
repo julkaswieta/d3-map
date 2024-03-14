@@ -1,5 +1,5 @@
-import * as d3 from "d3"
-import { showTooltip, hideTooltip } from "./tooltip.js"
+import * as d3 from "d3";
+import { showTooltip, hideTooltip } from "./tooltip.js";
 import { setupZoom } from "./zoom.js";
 import { getCountryData, getGeoJson } from "./data.js";
 import { getYear } from "./main.js";
@@ -14,10 +14,12 @@ const color = d3.scaleThreshold()
     .domain(thresholds)
     .range(d3.schemeYlOrBr[9]);
 
-// this is what takes the coordinates of the countries borders and translates it onto a 2d plane using different cartographic methods
+// this is what takes the coordinates of the countries borders 
+// and translates it onto a 2d plane using different cartographic methods
 const projection = d3.geoNaturalEarth1();
 
-const pathGenerator = d3.geoPath().projection(projection); // this is creating paths (country shapes) from coordinates using the selected projection
+// this is creating paths (country shapes) from coordinates using the selected projection
+const pathGenerator = d3.geoPath().projection(projection);
 
 export function resizeMap(defaultSize) {
     let width, height;
@@ -33,11 +35,15 @@ export function resizeMap(defaultSize) {
 export function initialiseMap() {
     const countries = getCountryData();
     setupContainer();
-    const chart = d3.select("#visualisation").append("g").attr("id", "map");
+
+    const chart = d3.select("#visualisation")
+        .append("g")
+        .attr("id", "map");
+
     chart.selectAll("path")
         .data(countries) // that's the data points
         .join("path") // create a new path for each country
-        .attr("d", pathGenerator) // that's the actual coordinates of the path
+        .attr("d", pathGenerator); // that's the actual coordinates of the path
 
     setupZoom();
 }
@@ -54,7 +60,7 @@ export function displayDatasets() {
         .attr("stroke", "darkgray")
         .on("mouseover", function (e, i) {
             showTooltip(i, this);
-            d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
+            d3.select(this).raise(); // ensures stroke of this country stays on top on hover
         })
         .on("mouseout", hideTooltip);
 }
@@ -72,9 +78,9 @@ function fillColour(d, year) {
 function colourClass(d, year) {
     const datasets = getDatasets();
     if (d.properties[datasets[0]] !== undefined)
-        return "c" + color(d.properties[datasets[0]][year]).substring(1)
+        return "c" + color(d.properties[datasets[0]][year]).substring(1);
     else if (d.properties[datasets[1]] !== undefined)
-        return "c" + color(d.properties[datasets[1]][year]).substring(1)
+        return "c" + color(d.properties[datasets[1]][year]).substring(1);
     else
         return "";
 }
@@ -87,17 +93,6 @@ function setupContainer() {
         .attr("viewBox", `0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`)
         .attr("style", "max-width: 100%; height: auto")
         .attr("id", "visualisation");
-}
-
-export function changeYear(year) {
-    const paths = d3.select("#map").selectAll("path");
-    paths.attr("class", (d) => color(d.properties[year]) === undefined ? "" : "c" + color(d.properties[year]).substring(1))
-        .classed("country", true)
-        .attr("fill", d => color(d.properties[year]) ?? "#e8e6e6")
-        .on("mouseover", function (e, i) {
-            showTooltip(i, this);
-            d3.select(this).raise(); // this line ensures that the stroke of this country stays on top on hover
-        });
 }
 
 export function getColor() {

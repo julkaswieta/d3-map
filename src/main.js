@@ -1,3 +1,4 @@
+"use strict";
 import { setupSlider } from "./slider.js";
 import { resizeMap, initialiseMap, displayDatasets } from "./map.js";
 import { loadAllData } from "./data.js";
@@ -26,5 +27,4 @@ export function getYear() {
 
 export function updateYear(newYear) {
     year = newYear;
-    console.log(year)
 }

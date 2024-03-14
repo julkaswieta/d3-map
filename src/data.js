@@ -1,5 +1,5 @@
 import { csv, json } from "d3";
-import { feature } from "topojson"
+import { feature } from "topojson";
 
 let countryData;
 let geoJson;
@@ -16,6 +16,10 @@ export function getGeoJson() {
 export async function loadAllData() {
     await loadGeoJSON();
     await loadData();
+}
+
+export function getYears() {
+    return years;
 }
 
 async function loadGeoJSON() {
@@ -51,8 +55,4 @@ function processDataset(coffeeData, geoJSON, dataset) {
             }
         }
     }
-}
-
-export function getYears() {
-    return years;
 }

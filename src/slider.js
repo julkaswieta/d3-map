@@ -10,7 +10,7 @@ let sliderBox;
 export function setupSlider() {
     const years = getYears();
     let year = getYear();
-    const [width, height] = getOriginalSVGSize();
+    const [width,] = getOriginalSVGSize();
 
     sliderBox = select("#slider-container")
         .append("svg")
@@ -31,18 +31,21 @@ export function setupSlider() {
             year = val;
             updateYear(year);
             displayDatasets();
-        })
+        });
 
     sliderBox.call(slider);
     formatTicks();
 }
 
 function formatTicks() {
-    const ticks = select("g.axis").selectChildren("g.tick").selectChildren("text")
+    const ticks = select("g.axis")
+        .selectChildren("g.tick")
+        .selectChildren("text");
+
     ticks.each(function () {
         const year = +this.textContent;
         if (year % 5 != 0) {
             select(this).style("visibility", "hidden");
         }
-    })
+    });
 }
