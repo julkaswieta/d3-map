@@ -1,13 +1,17 @@
 import * as d3 from "d3";
 import { sidePanel } from "./extra-text";
 import { displayDatasets } from "./map";
-import { addDataset, removeDataset } from "./datasets";
+import { addDataset, getDatasets, removeDataset } from "./datasets";
 
 const panelWidth = 300;
 
 export function setupSidePanel() {
     setupHeader();
     setupButtons();
+    const datasets = getDatasets();
+    if (getDatasets().length > 0) {
+        d3.select("#" + datasets[0]).classed("unclicked", false).classed("clicked", true);
+    }
 }
 
 function setupHeader() {
@@ -42,6 +46,7 @@ function setupButtons() {
         buttonGroup.append("button")
             .text(buttonLabels[i])
             .attr("class", "dataset-choice")
+            .attr("id", buttonLabels[i].toLowerCase())
             .classed("unclicked", true)
             .on("click", function () {
                 datasetOnClick(d3.select(this), buttonLabels[i]);

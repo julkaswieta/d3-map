@@ -1,4 +1,4 @@
-let datasets = [];
+let datasets = ["production"];
 
 export function getDatasets() {
     return datasets;
