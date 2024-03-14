@@ -39,14 +39,16 @@ function initLineChart(ds1Exists, ds2Exists) {
         .attr("height", height)
         .attr("viewBox", [0, 0, width, height]);
 
-    console.log(minMaxValues)
-
-    xScale = d3.scaleLinear([minMaxValues.minYear, minMaxValues.maxYear], [margin.left, width - margin.right]);
-    yScale = d3.scaleLinear([0, minMaxValues.maxValue], [height - margin.bottom, margin.top]);
+    xScale = d3.scaleLinear([minMaxValues.minYear, minMaxValues.maxYear],
+        [margin.left, width - margin.right]);
+    yScale = d3.scaleLinear([0, minMaxValues.maxValue],
+        [height - margin.bottom, margin.top]);
 
     chart.append("g")
         .attr("transform", `translate(0, ${height - margin.bottom})`)
-        .call(d3.axisBottom(xScale).tickValues([minMaxValues.minYear, minMaxValues.maxYear]).tickFormat(d => (d == minMaxValues.maxYear | d == minMaxValues.minYear) ? d : ""));
+        .call(d3.axisBottom(xScale)
+            .tickValues([minMaxValues.minYear, minMaxValues.maxYear])
+            .tickFormat(d => (d == minMaxValues.maxYear | d == minMaxValues.minYear) ? d : ""));
 
     chart.append("g")
         .attr("transform", `translate(${margin.left}, 0)`)
@@ -65,20 +67,45 @@ function getMinMax(ds1Exists, ds2Exists) {
     if (ds1Exists && ds2Exists)
         return compareMinMaxValues(d1, d2);
     else
-        return (d1.minYear != undefined && d1.minYear != NaN) ? d1 : d2;
+        return (d1.minYear != undefined
+            && d1.minYear != NaN)
+            ? d1
+            : d2;
+}
+
+function getDatasetMinMax(dataset) {
+    const years = extractYears(dataset);
+    const values = extractValues(dataset);
+    return {
+        minYear: d3.min(years),
+        maxYear: d3.max(years),
+        maxValue: d3.max(values)
+    };
+}
+
+function extractYears(dataset) {
+    const props = { ...country.properties[dataset] };
+    delete props.name;
+    const years = Object.keys(props).map(d => +d);
+    return years;
+}
+
+function extractValues(dataset) {
+    const props = { ...country.properties[dataset] };
+    delete props.name;
+    const values = Object.values(props).map(d => +d);
+    return values;
 }
 
 function compareMinMaxValues(set1, set2) {
     const minY = set1.minYear < set2.minYear ? set1.minYear : set2.minYear;
     const maxY = set1.maxYear > set2.maxYear ? set1.maxYear : set2.maxYear;
     const maxV = set1.maxValue > set2.maxValue ? set1.maxValue : set2.maxValue;
-    return { minYear: +minY, maxYear: +maxY, maxValue: +maxV };
-}
-
-function getDatasetMinMax(dataset) {
-    const years = extractYears(dataset);
-    const values = extractValues(dataset);
-    return { minYear: d3.min(years), maxYear: d3.max(years), maxValue: d3.max(values) };
+    return {
+        minYear: +minY,
+        maxYear: +maxY,
+        maxValue: +maxV
+    };
 }
 
 function addDatasetToChart(dataset, strokeColour) {
@@ -96,6 +123,15 @@ function addDatasetToChart(dataset, strokeColour) {
     return d3.max(values);
 }
 
+function cleanYearValues(years, values) {
+    return years.map(function (x, i) {
+        return {
+            year: x,
+            value: values[i]
+        };
+    });
+}
+
 function addDataPoint(yearValues) {
     const dataPoint = yearValues.filter(d => d.year == year)[0];
 
@@ -104,24 +140,4 @@ function addDataPoint(yearValues) {
         .attr("cx", xScale(dataPoint.year))
         .attr("cy", yScale(dataPoint.value))
         .attr("r", 2.5);
-}
-
-function cleanYearValues(years, values) {
-    return years.map(function (x, i) {
-        return { year: x, value: values[i] };
-    });
-}
-
-function extractYears(dataset) {
-    const props = { ...country.properties[dataset] };
-    delete props.name;
-    const years = Object.keys(props).map(d => +d);
-    return years;
-}
-
-function extractValues(dataset) {
-    const props = { ...country.properties[dataset] };
-    delete props.name;
-    const values = Object.values(props).map(d => +d);
-    return values;
 }
