@@ -5,14 +5,18 @@ import { getDatasets } from "./datasets";
 import { getYear } from "./main";
 
 const MARGIN = { top: 20, right: 10, left: 10, bottom: 20 };
-const TOOLTIP_WIDTH = 250;
-const TOOLTIP_HEIGHT = 150;
+const TOOLTIP_WIDTH = 240;
+const TOOLTIP_HEIGHT = 155;
 
 const tooltip = document.querySelector("#tooltip");
 let popperInstance = null;
 
 let country;
 let year;
+
+let datasets;
+let ds1Exists;
+let ds2exists;
 
 export function createPopperInstance(element) {
     popperInstance = createPopper(element, tooltip, {
@@ -56,14 +60,19 @@ export function showTooltip(countryData, targetElement) {
         .style("word-wrap", "normal")
         .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
 
+    datasets = getDatasets();
+
+    ds1Exists = country.properties[datasets[0]] !== undefined;
+    ds2exists = country.properties[datasets[1]] !== undefined;
+
     addAmountText();
 
     const lineChart = svg.append("g")
         .attr("id", "linechart-container")
-        .attr("transform", `translate(10, 40)`);
+        .attr("transform", `translate(10, 50)`);
 
-    // if (country.properties[datasets[0]] !== undefined)
-    //     createLineChart(country, year);
+    if (ds1Exists || ds2exists)
+        createLineChart(country, year);
 
     if (popperInstance)
         popperInstance.destroy();
@@ -72,15 +81,10 @@ export function showTooltip(countryData, targetElement) {
 }
 
 function addAmountText() {
-    const datasets = getDatasets();
-
-    const ds1Exists = country.properties[datasets[0]] !== undefined;
-    const ds2exists = country.properties[datasets[1]] !== undefined;
-
     const text1 = select("#amount-1");
 
     if (ds1Exists) {
-        displayDatasetAmount(datasets[0], text1);
+        displayDatasetAmount(datasets[0], text1, "steelblue");
 
         if (ds2exists) {
             const text2 = select("#amounts").append("text")
@@ -89,12 +93,12 @@ function addAmountText() {
                 .style("word-wrap", "normal")
                 .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
 
-            displayDatasetAmount(datasets[1], text2);
+            displayDatasetAmount(datasets[1], text2, "navy");
         }
     }
     else {
         if (ds2exists) {
-            displayDatasetAmount(datasets[1], text1)
+            displayDatasetAmount(datasets[1], text1, "steelblue")
         }
         else {
             text1.text("No data");
@@ -107,12 +111,12 @@ function convertDatasetName(dataset) {
     return dataset.charAt(0).toUpperCase() + dataset.slice(1);
 }
 
-function displayDatasetAmount(dataset, element) {
+function displayDatasetAmount(dataset, element, textColour) {
     if (country.properties[dataset][year] !== undefined) {
         const datasetName = convertDatasetName(dataset);
         const datasetAmount = format(",")(country.properties[dataset][year]) + " bags";
         element.text(datasetName + ": " + datasetAmount);
-        element.attr("fill", "red");
+        element.attr("fill", textColour);
     }
     else {
         element.text("No " + dataset + " data");
