@@ -2,7 +2,6 @@
 import { setupSlider } from "./slider.js";
 import { resizeMap, initialiseMap, displayDatasets } from "./map.js";
 import { loadAllData } from "./data.js";
-import { setupLegend } from "./legend.js";
 import { setupZoomButtons } from "./zoom.js";
 import { setupSidePanel } from "./side-panel.js";
 
@@ -18,7 +17,6 @@ async function initialise() {
     setupSidePanel();
     setupSlider();
     setupZoomButtons();
-    setupLegend();
 }
 
 export function getYear() {
