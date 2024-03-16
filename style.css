@@ -1,6 +1,6 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #DFD3C3;
+    background-color: #f2e9dc;
     justify-content: center;
     display: flex;
     flex-flow: row wrap;
@@ -63,26 +63,39 @@ body {
 
 button.dataset-choice {
     display: block;
+    width: 50%;
     margin: 5px;
+    border-width: 0.5px;
     border-radius: 10px;
     padding: 5px;
-    background-color: lightgrey;
+    background-color: #fff9f0;
 }
 
-button.unclicked {
-    border-color: darkgray;
+button.unavailable {
+    background-color: lightgray;
+    color: #666666;
+    border-color: lightgray;
+    border-style: none;
 }
 
-button.clicked {
-    border-color: red;
+button#production.clicked {
+    background-color: #fdd0a2;
+    border-color: orange;
 }
 
-button#production {
-    background-color: orange;
+button#export.clicked {
+    background-color: #fdd0a2;
+    border-color: orange;
 }
 
-button#consumption {
-    background-color: lightblue;
+button#consumption.clicked {
+    background-color: #c6dbef;
+    border-color: #6baed6;
+}
+
+button#import.clicked {
+    background-color: #c6dbef;
+    border-color: #6baed6;
 }
 
 #info-text {

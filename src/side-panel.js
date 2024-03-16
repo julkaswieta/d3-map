@@ -58,17 +58,27 @@ function setupButtons() {
 }
 
 function datasetOnClick(button, dataset) {
+    const possibleDatasets = ["production", "consumption", "import", "export"];
     if (button.classed("unclicked")) {
         const canAddNew = addDataset(dataset);
+        const datasets = getDatasets();
         if (canAddNew) {
             displayDatasets();
             changeText(dataset);
             button.classed("unclicked", false);
             button.classed("clicked", true);
+            if (datasets.length > 1) {
+                const unavailable = possibleDatasets.filter(d => !datasets.includes(d));
+                unavailable.forEach(d => console.log(d3.select("button#" + d).classed("unavailable", true).attr("title", "Cannot select more than two datasets")));
+            }
         }
     }
     else {
         removeDataset(dataset);
+        const datasets = getDatasets();
+        if (datasets.length <= 1) {
+            d3.selectAll("button.dataset-choice").each(function (d) { d3.select(this).classed("unavailable", false).attr("title", null) });
+        }
         displayDatasets();
         button.classed("unclicked", true);
         button.classed("clicked", false);
