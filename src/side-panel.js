@@ -2,6 +2,8 @@ import * as d3 from "d3";
 import { sidePanel } from "./extra-text";
 import { displayDatasets } from "./map";
 import { addDataset, getDatasets, removeDataset } from "./datasets";
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
 export function setupSidePanel() {
     setupHeader();
@@ -22,17 +24,24 @@ function setupHeader() {
     header.append("h1")
         .text("Coffee production");
 
-    header.append("p")
-        .append("a")
-        .attr("href", "https://icocoffee.org/")
-        .attr("target", "_blank")
-        .text("Data source: International Coffee Organisation");
+    header.append("button")
+        .attr("id", "data-source")
+        .html(createExternalLinkIcon)
+        .append("text")
+        .text("Data source: International Coffee Organisation")
+        .style("margin-left", "8px")
+        .on("click", d => window.open("https://icocoffee.org/", '_blank').focus());
 
     header.append("h3")
         .text("Please select one or two metrics to be displayed on the map: ");
 
     d3.select("#side-panel")
         .style("border-style", "solid");
+}
+
+function createExternalLinkIcon() {
+    library.add(faArrowUpRightFromSquare);
+    return icon(faArrowUpRightFromSquare).html;
 }
 
 function setupButtons() {

@@ -56,7 +56,7 @@ body {
     border-width: 1px;
     border-radius: 10px;
     padding: 5px;
-    max-width: 300px;
+    max-width: 350px;
     margin-left: 20px;
     height: auto;
 }
@@ -74,8 +74,8 @@ button.dataset-choice {
 button.unavailable {
     background-color: lightgray;
     color: #666666;
-    border-color: lightgray;
-    border-style: none;
+    border-color: #f2e9dc;
+    border-style: solid;
 }
 
 button#production.clicked {
@@ -96,6 +96,20 @@ button#consumption.clicked {
 button#import.clicked {
     background-color: #c6dbef;
     border-color: #6baed6;
+}
+
+button#data-source {
+    text-align: left;
+    border-style: none;
+    background-color: #f2e9dc;
+    color: #666666;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+button#data-source:hover {
+    text-decoration: underline;
+    color: blue;
 }
 
 #info-text {
