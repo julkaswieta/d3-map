@@ -32,7 +32,7 @@ function setupHeader() {
         .append("text")
         .text("Data source: International Coffee Organisation")
         .style("margin-left", "8px")
-        .on("click", d => window.open("https://icocoffee.org/", '_blank').focus());
+        .on("click", () => window.open("https://icocoffee.org/", "_blank").focus());
 
     header.append("h3")
         .text("Please select one or two metrics to be displayed on the map: ");
@@ -64,7 +64,7 @@ function setupButtons() {
 }
 
 function setupText() {
-    const infoText = d3.select("#side-panel")
+    d3.select("#side-panel")
         .append("div")
         .attr("id", "info-text");
 }
@@ -81,7 +81,11 @@ function datasetOnClick(button, dataset) {
             button.classed("clicked", true);
             if (datasets.length > 1) {
                 const unavailable = possibleDatasets.filter(d => !datasets.includes(d));
-                unavailable.forEach(d => console.log(d3.select("button#" + d).classed("unavailable", true).attr("title", "Cannot select more than two datasets")));
+                unavailable.forEach(d => console.log(
+                    d3.select("button#" + d)
+                        .classed("unavailable", true)
+                        .attr("title", "Cannot select more than two datasets")
+                ));
             }
         }
     }
@@ -90,7 +94,12 @@ function datasetOnClick(button, dataset) {
         removeInfoText(dataset);
         const datasets = getDatasets();
         if (datasets.length <= 1) {
-            d3.selectAll("button.dataset-choice").each(function (d) { d3.select(this).classed("unavailable", false).attr("title", null) });
+            d3.selectAll("button.dataset-choice")
+                .each(function () {
+                    d3.select(this)
+                        .classed("unavailable", false)
+                        .attr("title", null);
+                });
         }
         displayDatasets();
         button.classed("unclicked", true);
@@ -98,19 +107,10 @@ function datasetOnClick(button, dataset) {
     }
 }
 
-function changeText(dataset) {
-    const infoText = d3.select("#info-text")
-        .style("background-color", "lightgrey");
-
-    infoText.selectChild("h3")
-        .text(dataset);
-    infoText.selectChild("p")
-        .text(sidePanel[dataset]);
-}
-
 function addInfoText(dataset) {
     dataset = dataset.toLowerCase();
-    const infoText = d3.select("#info-text").append("div")
+    const infoText = d3.select("#info-text")
+        .append("div")
         .attr("id", dataset)
         .classed("visible-info-text", true);
 

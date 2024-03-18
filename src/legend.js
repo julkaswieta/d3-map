@@ -25,7 +25,9 @@ export function updateLegend() {
     const consumers = datasets.filter(d => d == "consumption" || d == "import");
     const height = getOriginalSVGSize()[1];
     if (producers.length > 0) {
-        const title = "Coffee " + (producers[0] == "production" ? "produced" : "exported") + " (in 60kg bags)";
+        const title = "Coffee "
+            + (producers[0] == "production" ? "produced" : "exported")
+            + " (in 60kg bags)";
         d3.select("#producers-legend").remove();
         constructLegend(getColor(),
             height * 0.88,
@@ -39,7 +41,9 @@ export function updateLegend() {
         d3.select("#producers-legend").remove();
 
     if (consumers.length > 0) {
-        const title = "Coffee " + (consumers[0] == "consumption" ? "consumed" : "imported") + " (in 60kg bags)";
+        const title = "Coffee "
+            + (consumers[0] == "consumption" ? "consumed" : "imported")
+            + " (in 60kg bags)";
         if (producers.length > 0) {
             d3.select("#consumers-legend").remove();
             constructLegend(getColor2(),
@@ -135,11 +139,15 @@ function Legend(color, {
 
     svg.append("g")
         .attr("transform", `translate(0,${height - marginBottom})`)
-        .call(displayValues ? d3.axisBottom(x)
-            .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
-            .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
-            .tickSize(tickSize)
-            .tickValues(tickValues) : d3.axisBottom(x).ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined).tickFormat(d => ""))
+        .call(displayValues
+            ? d3.axisBottom(x)
+                .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
+                .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
+                .tickSize(tickSize)
+                .tickValues(tickValues)
+            : d3.axisBottom(x)
+                .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
+                .tickFormat(d => ""))
         .call(tickAdjust)
         .call(g => g.select(".domain").remove())
         .call(g => g.append("text")

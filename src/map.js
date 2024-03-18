@@ -139,4 +139,3 @@ export function getMapWidthHeight() {
     const height = mapSize.height;
     return [width, height];
 }
-

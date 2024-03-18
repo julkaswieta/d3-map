@@ -86,7 +86,10 @@ function addAmountText(datasets, ds1Exists, ds2Exists) {
     const text1 = select("#amount-1");
 
     if (ds1Exists) {
-        const color = (datasets[0] == "consumption" || datasets[0] == "import") ? "steelblue" : "#f16913";
+        const color = (datasets[0] == "consumption" || datasets[0] == "import")
+            ? "steelblue"
+            : "#f16913";
+
         displayDatasetAmount(datasets[0], text1, color);
 
         if (ds2Exists) {
@@ -96,18 +99,26 @@ function addAmountText(datasets, ds1Exists, ds2Exists) {
                 .attr("y", 20)
                 .style("word-wrap", "normal")
                 .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
-            const color = (datasets[1] == "consumption" || datasets[1] == "import") ? "navy" : "#7f2704";
+
+            const color = (datasets[1] == "consumption" || datasets[1] == "import")
+                ? "navy"
+                : "#7f2704";
+
             displayDatasetAmount(datasets[1], text2, color);
         }
     }
     else {
         if (ds2Exists) {
-            const color = (datasets[1] == "consumption" || datasets[1] == "import") ? "steelblue" : "#f16913";
-            displayDatasetAmount(datasets[1], text1, "steelblue");
+            const color = (datasets[1] == "consumption" || datasets[1] == "import")
+                ? "steelblue"
+                : "#f16913";
+
+            displayDatasetAmount(datasets[1], text1, color);
         }
         else {
             text1.text("No data");
             text1.attr("fill", "black");
+
             select("#tooltip-container")
                 .attr("height", 100)
                 .attr("width", 200);

@@ -17,12 +17,17 @@ export function createLineChart(countryData) {
     const ds2Exists = country.properties[datasets[1]] !== undefined;
 
     initLineChart(ds1Exists, ds2Exists);
+
     if (ds1Exists) {
-        const color = (datasets[0] == "consumption" || datasets[0] == "import") ? "steelblue" : "#f16913";
+        const color = (datasets[0] == "consumption" || datasets[0] == "import")
+            ? "steelblue"
+            : "#f16913";
         addDatasetToChart(datasets[0], color);
     }
     if (ds2Exists) {
-        const color = (datasets[1] == "consumption" || datasets[1] == "import") ? "navy" : "#7f2704";
+        const color = (datasets[1] == "consumption" || datasets[1] == "import")
+            ? "navy"
+            : "#7f2704";
         addDatasetToChart(datasets[1], color);
     }
 }
@@ -69,9 +74,7 @@ function getMinMax(ds1Exists, ds2Exists) {
     if (ds1Exists && ds2Exists)
         return compareMinMaxValues(d1, d2);
     else
-        return (d1.minYear != undefined && !isNaN(d1.minYear))
-            ? d1
-            : d2;
+        return (d1.minYear != undefined && !isNaN(d1.minYear)) ? d1 : d2;
 }
 
 function getDatasetMinMax(dataset) {
@@ -102,6 +105,7 @@ function compareMinMaxValues(set1, set2) {
     const minY = set1.minYear < set2.minYear ? set1.minYear : set2.minYear;
     const maxY = set1.maxYear > set2.maxYear ? set1.maxYear : set2.maxYear;
     const maxV = set1.maxValue > set2.maxValue ? set1.maxValue : set2.maxValue;
+
     return {
         minYear: +minY,
         maxYear: +maxY,
