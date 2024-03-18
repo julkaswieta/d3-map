@@ -5,6 +5,7 @@ body {
     display: flex;
     flex-flow: row wrap;
     min-width: 300px;
+    padding-top: 20px;
 }
 
 #main-container {
@@ -77,6 +78,7 @@ button.dataset-choice {
     display: block;
     width: 50%;
     margin: 5px;
+    margin-left: 8px;
     border-width: 0.5px;
     padding: 5px;
     border-color: lightgray;
@@ -117,6 +119,7 @@ button#data-source {
     color: #666666;
     text-decoration: underline;
     font-size: 14px;
+    margin-left: 6px;
 }
 
 button#data-source:hover {
@@ -138,6 +141,39 @@ button.continent-zoom {
 }
 
 button.continent-zoom.clicked {
-    border-color: #999388;
-    background-color: #d2cdc4;
+    border-color: grey;
+    background-color: lightgrey;
+}
+
+#info-text {
+    margin: 5px;
+}
+
+.visible-info-text {
+    background-color: #c6dbef;
+    border-radius: 15px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.visible-info-text#production {
+    background-color: #fdd0a2;
+}
+
+.visible-info-text#export {
+    background-color: #fdd0a2;
+}
+
+h3 {
+    margin: 10px;
+}
+
+h3.dataset-info {
+    margin: 5px;
+    margin-top: 0px;
+}
+
+p.dataset-info {
+    margin: 5px;
+    margin-top: 10px;
 }

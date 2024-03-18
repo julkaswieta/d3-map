@@ -8,11 +8,13 @@ import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 export function setupSidePanel() {
     setupHeader();
     setupButtons();
+    setupText();
     const datasets = getDatasets();
     if (getDatasets().length > 0) {
         d3.select("#" + datasets[0])
             .classed("unclicked", false)
             .classed("clicked", true);
+        addInfoText(datasets[0]);
     }
 }
 
@@ -22,7 +24,7 @@ function setupHeader() {
         .attr("id", "header");
 
     header.append("h1")
-        .text("Coffee production");
+        .text("Coffee statistics");
 
     header.append("button")
         .attr("id", "data-source")
@@ -46,11 +48,6 @@ function createExternalLinkIcon() {
 
 function setupButtons() {
     const buttonGroup = d3.select("#side-panel").append("g");
-    const infoText = d3.select("#side-panel")
-        .append("div")
-        .attr("id", "info-text");
-    infoText.append("h3");
-    infoText.append("p");
 
     const buttonLabels = ["Production", "Consumption", "Import", "Export"];
 
@@ -66,6 +63,12 @@ function setupButtons() {
     }
 }
 
+function setupText() {
+    const infoText = d3.select("#side-panel")
+        .append("div")
+        .attr("id", "info-text");
+}
+
 function datasetOnClick(button, dataset) {
     const possibleDatasets = ["production", "consumption", "import", "export"];
     if (button.classed("unclicked")) {
@@ -73,7 +76,7 @@ function datasetOnClick(button, dataset) {
         const datasets = getDatasets();
         if (canAddNew) {
             displayDatasets();
-            changeText(dataset);
+            addInfoText(dataset);
             button.classed("unclicked", false);
             button.classed("clicked", true);
             if (datasets.length > 1) {
@@ -84,6 +87,7 @@ function datasetOnClick(button, dataset) {
     }
     else {
         removeDataset(dataset);
+        removeInfoText(dataset);
         const datasets = getDatasets();
         if (datasets.length <= 1) {
             d3.selectAll("button.dataset-choice").each(function (d) { d3.select(this).classed("unavailable", false).attr("title", null) });
@@ -94,12 +98,32 @@ function datasetOnClick(button, dataset) {
     }
 }
 
-function changeText(metric) {
+function changeText(dataset) {
     const infoText = d3.select("#info-text")
         .style("background-color", "lightgrey");
 
     infoText.selectChild("h3")
-        .text(metric);
+        .text(dataset);
     infoText.selectChild("p")
-        .text(sidePanel[metric]);
+        .text(sidePanel[dataset]);
+}
+
+function addInfoText(dataset) {
+    dataset = dataset.toLowerCase();
+    const infoText = d3.select("#info-text").append("div")
+        .attr("id", dataset)
+        .classed("visible-info-text", true);
+
+    infoText.append("h3")
+        .classed("dataset-info", true)
+        .text("Coffee " + dataset);
+
+    infoText.append("p")
+        .classed("dataset-info", true)
+        .text(sidePanel[dataset]);
+}
+
+function removeInfoText(dataset) {
+    dataset = dataset.toLowerCase();
+    d3.select("#info-text").selectChild("#" + dataset).remove();
 }
