@@ -85,6 +85,11 @@ button.dataset-choice {
     background-color: #fff9f0;
 }
 
+button.dataset-choice:hover {
+    border-color: grey;
+    background-color: blanchedalmond;
+}
+
 button.unavailable {
     background-color: lightgray;
     color: #666666;
@@ -92,9 +97,20 @@ button.unavailable {
     border-style: solid;
 }
 
+button.unavailable:hover {
+    background-color: lightgray;
+    color: #666666;
+    border-color: #f2e9dc;
+}
+
 button#production.clicked {
     background-color: #fdd0a2;
     border-color: orange;
+}
+
+button#production.clicked:hover {
+    background-color: #f0c498;
+    border-color: darkorange;
 }
 
 button#export.clicked {
@@ -102,14 +118,29 @@ button#export.clicked {
     border-color: orange;
 }
 
+button#export.clicked:hover {
+    background-color: #f0c498;
+    border-color: darkorange;
+}
+
 button#consumption.clicked {
     background-color: #c6dbef;
     border-color: #6baed6;
 }
 
+button#consumption.clicked:hover {
+    background-color: rgb(162, 200, 214);
+    border-color: lightskyblue;
+}
+
 button#import.clicked {
     background-color: #c6dbef;
     border-color: #6baed6;
+}
+
+button#import.clicked:hover {
+    background-color: rgb(162, 200, 214);
+    border-color: lightskyblue;
 }
 
 button#data-source {
@@ -143,6 +174,16 @@ button.continent-zoom {
 button.continent-zoom.clicked {
     border-color: grey;
     background-color: lightgrey;
+}
+
+button.continent-zoom.unclicked:hover {
+    border-color: grey;
+    background-color: lightgrey;
+}
+
+button.continent-zoom.clicked:hover {
+    background-color: buttonface;
+    border-color: lightgray;
 }
 
 #info-text {
