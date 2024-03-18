@@ -28,7 +28,7 @@ export function updateLegend() {
         const title = "Coffee " + (producers[0] == "production" ? "produced" : "exported") + " (in 60kg bags)";
         d3.select("#producers-legend").remove();
         constructLegend(getColor(),
-            height * 0.88,
+            height * 0.9,
             title,
             true,
             "~s",
@@ -43,7 +43,7 @@ export function updateLegend() {
         if (producers.length > 0) {
             d3.select("#consumers-legend").remove();
             constructLegend(getColor2(),
-                height * 0.8,
+                height * 0.82,
                 title,
                 false,
                 null,
@@ -53,7 +53,7 @@ export function updateLegend() {
         else {
             d3.select("#consumers-legend").remove();
             constructLegend(getColor2(),
-                height * 0.88,
+                height * 0.9,
                 title,
                 true,
                 "~s",
