@@ -86,7 +86,8 @@ function addAmountText(datasets, ds1Exists, ds2Exists) {
     const text1 = select("#amount-1");
 
     if (ds1Exists) {
-        displayDatasetAmount(datasets[0], text1, "steelblue");
+        const color = (datasets[0] == "consumption" || datasets[0] == "import") ? "steelblue" : "#f16913";
+        displayDatasetAmount(datasets[0], text1, color);
 
         if (ds2Exists) {
             const text2 = select("#amounts")
@@ -95,12 +96,13 @@ function addAmountText(datasets, ds1Exists, ds2Exists) {
                 .attr("y", 20)
                 .style("word-wrap", "normal")
                 .attr("width", TOOLTIP_WIDTH - MARGIN.left - MARGIN.right);
-
-            displayDatasetAmount(datasets[1], text2, "navy");
+            const color = (datasets[1] == "consumption" || datasets[1] == "import") ? "navy" : "#7f2704";
+            displayDatasetAmount(datasets[1], text2, color);
         }
     }
     else {
         if (ds2Exists) {
+            const color = (datasets[1] == "consumption" || datasets[1] == "import") ? "steelblue" : "#f16913";
             displayDatasetAmount(datasets[1], text1, "steelblue");
         }
         else {

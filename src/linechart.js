@@ -18,10 +18,12 @@ export function createLineChart(countryData) {
 
     initLineChart(ds1Exists, ds2Exists);
     if (ds1Exists) {
-        addDatasetToChart(datasets[0], "steelblue");
+        const color = (datasets[0] == "consumption" || datasets[0] == "import") ? "steelblue" : "#f16913";
+        addDatasetToChart(datasets[0], color);
     }
     if (ds2Exists) {
-        addDatasetToChart(datasets[1], "navy");
+        const color = (datasets[1] == "consumption" || datasets[1] == "import") ? "navy" : "#7f2704";
+        addDatasetToChart(datasets[1], color);
     }
 }
 
