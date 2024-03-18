@@ -6,8 +6,8 @@ import { getYear } from "./main.js";
 import { getDatasets } from "./datasets.js";
 import { updateLegend } from "./legend.js";
 
-const SVG_WIDTH = 800;
-const SVG_HEIGHT = 500;
+const SVG_WIDTH = 1000;
+const SVG_HEIGHT = 600;
 
 const thresholds = [10000, 100000, 500000, 1000000, 5000000, 10000000, 25000000, 50000000];
 
@@ -34,7 +34,7 @@ export function resizeMap(defaultSize) {
         width = SVG_WIDTH;
         height = SVG_HEIGHT;
     }
-    projection.fitExtent([[10, 0], [width - 10, height - 50]], getGeoJson());
+    projection.fitExtent([[10, 0], [width - 10, height - 80]], getGeoJson());
 }
 
 export function initialiseMap() {
