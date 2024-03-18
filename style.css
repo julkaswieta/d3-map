@@ -186,6 +186,14 @@ button.continent-zoom.clicked:hover {
     border-color: lightgray;
 }
 
+#producers-legend {
+    text-shadow: 0 0 10px white;
+}
+
+#consumers-legend {
+    text-shadow: 0 0 10px white;
+}
+
 #info-text {
     margin: 5px;
 }
