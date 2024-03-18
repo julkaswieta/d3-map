@@ -23,6 +23,7 @@ body {
     border-color: black;
     border-width: 1px;
     border-radius: 5px;
+    margin: 2px;
 }
 
 .country:hover {
@@ -61,13 +62,24 @@ body {
     height: auto;
 }
 
+h1 {
+    margin: 10px;
+}
+
+button {
+    border-style: solid;
+    border-radius: 15px;
+    border-width: 0.5px;
+    padding: 5px;
+}
+
 button.dataset-choice {
     display: block;
     width: 50%;
     margin: 5px;
     border-width: 0.5px;
-    border-radius: 10px;
     padding: 5px;
+    border-color: lightgray;
     background-color: #fff9f0;
 }
 
@@ -116,4 +128,16 @@ button#data-source:hover {
     padding: 5px;
     border-radius: 5px;
     margin-top: 20px;
+}
+
+button.continent-zoom {
+    border-radius: 15px;
+    padding: 5px;
+    width: 100px;
+    border-color: lightgray;
+}
+
+button.continent-zoom.clicked {
+    border-color: #999388;
+    background-color: #d2cdc4;
 }

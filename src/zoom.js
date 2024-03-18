@@ -78,36 +78,12 @@ function setupRegionsZoom() {
         .style("margin-right", "10px");
 
     container.append("button")
-        .attr("id", "northAmerica")
-        .classed("continent-zoom", true)
-        .classed("unclicked", true)
-        .text("North America")
-        .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("northAmerica"));
-
-    container.append("button")
-        .attr("id", "southAmerica")
-        .classed("continent-zoom", true)
-        .classed("unclicked", true)
-        .text("South America")
-        .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("southAmerica"));
-
-    container.append("button")
         .attr("id", "africa")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("Africa")
         .style("margin-right", "10px")
         .on("click", () => zoomToContinent("africa"));
-
-    container.append("button")
-        .attr("id", "europe")
-        .classed("continent-zoom", true)
-        .classed("unclicked", true)
-        .text("Europe")
-        .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("europe"));
 
     container.append("button")
         .attr("id", "asia")
@@ -118,12 +94,36 @@ function setupRegionsZoom() {
         .on("click", () => zoomToContinent("asia"));
 
     container.append("button")
+        .attr("id", "europe")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
+        .text("Europe")
+        .style("margin-right", "10px")
+        .on("click", () => zoomToContinent("europe"));
+
+    container.append("button")
+        .attr("id", "northAmerica")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
+        .text("North America")
+        .style("margin-right", "10px")
+        .on("click", () => zoomToContinent("northAmerica"));
+
+    container.append("button")
         .attr("id", "oceania")
         .classed("continent-zoom", true)
         .classed("unclicked", true)
         .text("Oceania")
         .style("margin-right", "10px")
         .on("click", () => zoomToContinent("oceania"));
+
+    container.append("button")
+        .attr("id", "southAmerica")
+        .classed("continent-zoom", true)
+        .classed("unclicked", true)
+        .text("South America")
+        .style("margin-right", "10px")
+        .on("click", () => zoomToContinent("southAmerica"));
 }
 
 function styleButton(selected, zoomIn) {
