@@ -1,5 +1,15 @@
 let datasets = ["production"];
 
+let year = "2019";
+
+export function getYear() {
+    return year;
+}
+
+export function updateYear(newYear) {
+    year = newYear;
+}
+
 export function getDatasets() {
     return datasets;
 }

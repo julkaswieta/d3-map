@@ -1,8 +1,9 @@
-import { sliderBottom } from "d3-simple-slider";
+import { sliderBottom } from "d3-simple-slider"
 import { format, max, min, select } from "d3";
-import { displayDatasets, getOriginalSVGSize } from "./map";
+import { displayDatasets } from "./map";
 import { getYears } from "./data";
-import { getYear, updateYear } from "./main";
+import { getYear, updateYear } from "./datasets";
+import { getOriginalSVGSize } from "./projection";
 
 const slider = sliderBottom();
 let sliderBox;
@@ -10,7 +11,7 @@ let sliderBox;
 export function setupSlider() {
     const years = getYears();
     let year = getYear();
-    const [width,] = getOriginalSVGSize();
+    const width = getOriginalSVGSize().width;
 
     sliderBox = select("#slider-container")
         .append("svg")

@@ -81,11 +81,11 @@ function datasetOnClick(button, dataset) {
             button.classed("clicked", true);
             if (datasets.length > 1) {
                 const unavailable = possibleDatasets.filter(d => !datasets.includes(d));
-                unavailable.forEach(d => console.log(
+                unavailable.forEach(d =>
                     d3.select("button#" + d)
                         .classed("unavailable", true)
                         .attr("title", "Cannot select more than two datasets")
-                ));
+                );
             }
         }
     }

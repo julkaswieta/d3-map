@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { getMapWidthHeight, getOriginalSVGSize, getPathGenerator, resizeMap } from "./map";
+import { getCurrentMapSize, getPathGenerator, resizeMap } from "./projection";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,18 +8,19 @@ const mapMargin = 100;
 let zoom;
 let zoomedRegion = null;
 let recentreGroup;
+let originalMapSize;
 
 export function setupZoomButtons() {
     setupResetButton();
     setupRegionsZoom();
 }
 
-export function setupZoom() {
-    const [width, height] = getOriginalSVGSize();
+export function setupZoom(mapSize) {
+    originalMapSize = mapSize;
     zoom = d3.zoom()
-        .extent([[0, 0], [width, height]])
+        .extent([[0, 0], [originalMapSize.width, originalMapSize.height]])
         .scaleExtent([1, 8])
-        .translateExtent([[-mapMargin, -mapMargin], [width + mapMargin, height + mapMargin]])
+        .translateExtent([[-mapMargin, -mapMargin], [originalMapSize.width + mapMargin, originalMapSize.height + mapMargin]])
         .on("zoom", (event) => handleZoom(event.transform));
 
     d3.select("#visualisation").call(zoom);
@@ -33,24 +34,22 @@ function setupResetButton() {
     const buttonSize = 25;
     const margin = 5;
 
-    const [width, height] = getOriginalSVGSize();
-
     recentreGroup = d3.select("#visualisation")
         .append("g")
         .attr("id", "recentre");
 
     recentreGroup.append("circle")
         .attr("r", buttonSize)
-        .attr("cx", width - buttonSize - margin)
-        .attr("cy", height - buttonSize - margin)
+        .attr("cx", originalMapSize.width - buttonSize - margin)
+        .attr("cy", originalMapSize.height - buttonSize - margin)
         .attr("fill", "lightgrey")
         .attr("stroke", "darkgray")
         .on("click", () => resetZoom());
 
     recentreGroup.append("svg")
         .html(createRecentreIcon())
-        .attr("x", width / 2 - buttonSize - margin)
-        .attr("y", height / 2 - buttonSize - margin);
+        .attr("x", originalMapSize.width / 2 - buttonSize - margin)
+        .attr("y", originalMapSize.height / 2 - buttonSize - margin);
 }
 
 function createRecentreIcon() {
@@ -209,7 +208,7 @@ function calculateTransform(allBounds) {
     const x = (minXBound + maxXBound) / 2;
     const y = (minYBound + maxYBound) / 2;
 
-    let [width, height] = getMapWidthHeight();
+    let [width, height] = getCurrentMapSize();
     height = height * 0.8;
 
     const scale = .9 / Math.max(boxWidth / width, boxHeight / height);

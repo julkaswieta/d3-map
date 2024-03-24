@@ -1,35 +1,19 @@
 import * as d3 from "d3";
-import { getColor, getColor2, getOriginalSVGSize } from "./map";
 import { getDatasets } from "./datasets";
 
 const LEGEND_WIDTH = 500;
 
-function constructLegend(color, y, titleText, displayTicks, formatOfTicks, id, visibility) {
-    d3.select("#visualisation").append(() => Legend(
-        color,
-        {
-            title: titleText,
-            width: LEGEND_WIDTH,
-            displayValues: displayTicks,
-            tickFormat: formatOfTicks
-        }))
-        .attr("x", 10)
-        .attr("y", y)
-        .attr("id", id)
-        .attr("visibility", visibility);
-}
-
-export function updateLegend() {
+export function updateLegend(mapSize, color, color2) {
     const datasets = getDatasets();
     const producers = datasets.filter(d => d == "production" || d == "export");
     const consumers = datasets.filter(d => d == "consumption" || d == "import");
-    const height = getOriginalSVGSize()[1];
+    const height = mapSize.height;
     if (producers.length > 0) {
         const title = "Coffee "
             + (producers[0] == "production" ? "produced" : "exported")
             + " (in 60kg bags)";
         d3.select("#producers-legend").remove();
-        constructLegend(getColor(),
+        constructLegend(color,
             height * 0.88,
             title,
             true,
@@ -46,7 +30,7 @@ export function updateLegend() {
             + " (in 60kg bags)";
         if (producers.length > 0) {
             d3.select("#consumers-legend").remove();
-            constructLegend(getColor2(),
+            constructLegend(color2,
                 height * 0.8,
                 title,
                 false,
@@ -56,7 +40,7 @@ export function updateLegend() {
         }
         else {
             d3.select("#consumers-legend").remove();
-            constructLegend(getColor2(),
+            constructLegend(color2,
                 height * 0.88,
                 title,
                 true,
@@ -67,7 +51,21 @@ export function updateLegend() {
     }
     else
         d3.select("#consumers-legend").remove();
+}
 
+function constructLegend(color, y, titleText, displayTicks, formatOfTicks, id, visibility) {
+    d3.select("#visualisation").append(() => Legend(
+        color,
+        {
+            title: titleText,
+            width: LEGEND_WIDTH,
+            displayValues: displayTicks,
+            tickFormat: formatOfTicks
+        }))
+        .attr("x", 10)
+        .attr("y", y)
+        .attr("id", id)
+        .attr("visibility", visibility);
 }
 
 // Copyright 2021, Observable Inc.

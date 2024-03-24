@@ -1,6 +1,5 @@
 import * as d3 from "d3";
-import { getDatasets } from "./datasets";
-import { getYear } from "./main";
+import { getDatasets, getYear } from "./datasets";
 
 let country;
 let year;
