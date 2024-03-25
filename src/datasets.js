@@ -30,3 +30,7 @@ export function removeDataset(dataset) {
     dataset = dataset.toLowerCase();
     datasets = datasets.filter(d => d != dataset);
 }
+
+export function clearDatasets() {
+    datasets = [];
+}

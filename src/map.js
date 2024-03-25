@@ -68,7 +68,7 @@ export function displayDatasets() {
     updateLegend(mapSize, color, color2);
 }
 
-function colourClass(d, year) {
+export function colourClass(d, year) {
     const datasets = getDatasets();
     const d1Exists = d.properties[datasets[0]] !== undefined;
     const d2Exists = d.properties[datasets[1]] !== undefined;
@@ -85,7 +85,7 @@ function colourClass(d, year) {
         return "";
 }
 
-function fillColour(d, year) {
+export function fillColour(d, year) {
     const datasets = getDatasets();
     const d1Exists = d.properties[datasets[0]] !== undefined;
     const d2Exists = d.properties[datasets[1]] !== undefined;
