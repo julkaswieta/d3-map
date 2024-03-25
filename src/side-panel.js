@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { sidePanel } from "./extra-text";
+import { sidePanel } from "../public/data/extra-text";
 import { displayDatasets } from "./map";
 import { addDataset, getDatasets, removeDataset } from "./datasets";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";

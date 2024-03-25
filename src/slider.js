@@ -1,4 +1,4 @@
-import { sliderBottom } from "d3-simple-slider"
+import { sliderBottom } from "d3-simple-slider";
 import { format, max, min, select } from "d3";
 import { displayDatasets } from "./map";
 import { getYears } from "./data";

@@ -145,7 +145,7 @@ function Legend(color, {
                 .tickValues(tickValues)
             : d3.axisBottom(x)
                 .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
-                .tickFormat(d => ""))
+                .tickFormat(() => ""))
         .call(tickAdjust)
         .call(g => g.select(".domain").remove())
         .call(g => g.append("text")

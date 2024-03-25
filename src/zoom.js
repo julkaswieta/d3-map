@@ -20,7 +20,10 @@ export function setupZoom(mapSize) {
     zoom = d3.zoom()
         .extent([[0, 0], [originalMapSize.width, originalMapSize.height]])
         .scaleExtent([1, 8])
-        .translateExtent([[-mapMargin, -mapMargin], [originalMapSize.width + mapMargin, originalMapSize.height + mapMargin]])
+        .translateExtent([
+            [-mapMargin, -mapMargin],
+            [originalMapSize.width + mapMargin, originalMapSize.height + mapMargin]
+        ])
         .on("zoom", (event) => handleZoom(event.transform));
 
     d3.select("#visualisation").call(zoom);
