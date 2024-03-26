@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { getDatasets, getYear } from "./datasets";
 
-let country;
 let year;
 let lineGen;
 let xScale;
@@ -9,33 +8,33 @@ let yScale;
 
 export function createLineChart(countryData) {
     year = getYear();
-    country = countryData;
+    const country = countryData;
 
     const datasets = getDatasets();
     const ds1Exists = country.properties[datasets[0]] !== undefined;
     const ds2Exists = country.properties[datasets[1]] !== undefined;
 
-    initLineChart(ds1Exists, ds2Exists);
+    initLineChart(ds1Exists, ds2Exists, country);
 
     if (ds1Exists) {
         const color = (datasets[0] == "consumption" || datasets[0] == "import")
             ? "steelblue"
             : "#f16913";
-        addDatasetToChart(datasets[0], color);
+        addDatasetToChart(datasets[0], color, country);
     }
     if (ds2Exists) {
         const color = (datasets[1] == "consumption" || datasets[1] == "import")
             ? "navy"
             : "#7f2704";
-        addDatasetToChart(datasets[1], color);
+        addDatasetToChart(datasets[1], color, country);
     }
 }
 
-function initLineChart(ds1Exists, ds2Exists) {
+function initLineChart(ds1Exists, ds2Exists, country) {
     const margin = { left: 10, right: 20, top: 20, bottom: 20 };
     const [width, height] = [220, 100];
 
-    const minMaxValues = getMinMax(ds1Exists, ds2Exists);
+    const minMaxValues = getMinMax(ds1Exists, ds2Exists, country);
 
     const svg = d3.select("#linechart-container");
 
@@ -65,10 +64,10 @@ function initLineChart(ds1Exists, ds2Exists) {
         .y(d => yScale(d.value));
 }
 
-function getMinMax(ds1Exists, ds2Exists) {
+export function getMinMax(ds1Exists, ds2Exists, country) {
     const datasets = getDatasets();
-    let d1 = getDatasetMinMax(datasets[0]);
-    let d2 = getDatasetMinMax(datasets[1]);
+    let d1 = getDatasetMinMax(datasets[0], country);
+    let d2 = getDatasetMinMax(datasets[1], country);
 
     if (ds1Exists && ds2Exists)
         return compareMinMaxValues(d1, d2);
@@ -76,9 +75,9 @@ function getMinMax(ds1Exists, ds2Exists) {
         return (d1.minYear != undefined && !isNaN(d1.minYear)) ? d1 : d2;
 }
 
-function getDatasetMinMax(dataset) {
-    const years = extractYears(dataset);
-    const values = extractValues(dataset);
+export function getDatasetMinMax(dataset, country) {
+    const years = extractYears(dataset, country);
+    const values = extractValues(dataset, country);
     return {
         minYear: d3.min(years),
         maxYear: d3.max(years),
@@ -86,36 +85,42 @@ function getDatasetMinMax(dataset) {
     };
 }
 
-function extractYears(dataset) {
+export function extractYears(dataset, country) {
     const props = { ...country.properties[dataset] };
     delete props.name;
     const years = Object.keys(props).map(d => +d);
     return years;
 }
 
-function extractValues(dataset) {
+export function extractValues(dataset, country) {
     const props = { ...country.properties[dataset] };
     delete props.name;
     const values = Object.values(props).map(d => +d);
     return values;
 }
 
-function compareMinMaxValues(set1, set2) {
-    const minY = set1.minYear < set2.minYear ? set1.minYear : set2.minYear;
-    const maxY = set1.maxYear > set2.maxYear ? set1.maxYear : set2.maxYear;
-    const maxV = set1.maxValue > set2.maxValue ? set1.maxValue : set2.maxValue;
+export function compareMinMaxValues(set1, set2) {
+    const minY = set1.minYear < set2.minYear
+        ? set1.minYear
+        : (set2.minYear == undefined ? set1.minYear : set2.minYear);
+    const maxY = set1.maxYear > set2.maxYear
+        ? set1.maxYear
+        : (set2.maxYear == undefined ? set1.maxYear : set2.maxYear);
+    const maxV = set1.maxValue > set2.maxValue
+        ? set1.maxValue
+        : (set2.maxValue == undefined ? set1.maxValue : set2.maxValue);
 
     return {
-        minYear: +minY,
-        maxYear: +maxY,
-        maxValue: +maxV
+        minYear: minY,
+        maxYear: maxY,
+        maxValue: maxV
     };
 }
 
-function addDatasetToChart(dataset, strokeColour) {
-    const years = extractYears(dataset);
-    const values = extractValues(dataset);
-    const yearValues = cleanYearValues(years, values);
+function addDatasetToChart(dataset, strokeColour, country) {
+    const years = extractYears(dataset, country);
+    const values = extractValues(dataset, country);
+    const yearValues = combineYearsValues(years, values);
 
     d3.select("#linechart")
         .append("path")
@@ -128,7 +133,7 @@ function addDatasetToChart(dataset, strokeColour) {
     return d3.max(values);
 }
 
-function cleanYearValues(years, values) {
+export function combineYearsValues(years, values) {
     return years.map(function (x, i) {
         return {
             year: x,
