@@ -113,7 +113,7 @@ function Legend(color, {
             .rangeRound([marginLeft, width - marginRight]);
 
         svg.append("g")
-            .classed("legend-bins", true)
+            .classed("bins", true)
             .selectAll("rect")
             .data(color.range())
             .join("rect")
@@ -125,20 +125,33 @@ function Legend(color, {
             // event handlers added by me
             .on("click", function (d, i) {
                 const currentBin = d3.select(this);
-                const legend = d3.select(currentBin.node().parentNode).selectChildren();
+                const producersLegend = d3.select("#producers-legend")
+                    .selectChild("g.bins")
+                    .selectChildren();
+                const consumersLegend = d3.select("#consumers-legend")
+                    .selectChild("g.bins")
+                    .selectChildren();
+
                 if (currentBin.classed("selected") == false) {
                     d3.selectAll("path.country").attr("stroke", "darkgrey"); //uncolour countries
                     d3.selectAll("path.c" + i.substring(1)).attr("stroke", "black").raise();
                     currentBin.style("stroke", "black");
                     currentBin.classed("selected", true);
-                    legend.each(function () {
+                    producersLegend.each(function () {
                         const bin = d3.select(this);
                         if (bin.node() != currentBin.node()) {
                             bin.style("stroke", "none");
                             bin.classed("selected", false);
                         }
-
                     });
+                    consumersLegend.each(function () {
+                        const bin = d3.select(this);
+                        if (bin.node() != currentBin.node()) {
+                            bin.style("stroke", "none");
+                            bin.classed("selected", false);
+                        }
+                    });
+                    d3.select();
                 }
                 else {
                     d3.selectAll("path.c" + i.substring(1)).attr("stroke", "darkgrey");
