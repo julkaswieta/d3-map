@@ -42,17 +42,18 @@ function setupResetButton() {
         .attr("id", "recentre");
 
     recentreGroup.append("circle")
+        .attr("id", "recentre-button")
         .attr("r", buttonSize)
         .attr("cx", originalMapSize.width - buttonSize - margin)
         .attr("cy", originalMapSize.height - buttonSize - margin)
-        .attr("fill", "lightgrey")
-        .attr("stroke", "darkgray")
         .on("click", () => resetZoom());
 
     recentreGroup.append("svg")
         .html(createRecentreIcon())
         .attr("x", originalMapSize.width / 2 - buttonSize - margin)
-        .attr("y", originalMapSize.height / 2 - buttonSize - margin);
+        .attr("y", originalMapSize.height / 2 - buttonSize - margin)
+        .on("mouseenter", () => d3.select("#recentre-button").style("stroke", "black"))
+        .on("mouseleave", () => d3.select("#recentre-button").style("stroke", null));
 }
 
 function createRecentreIcon() {

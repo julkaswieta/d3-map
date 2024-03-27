@@ -221,3 +221,12 @@ p.dataset-info {
     margin: 5px;
     margin-top: 10px;
 }
+
+#recentre-button {
+    fill: lightgrey;
+    stroke: darkgrey;
+}
+
+#recentre-button:hover {
+    stroke: black;
+}
