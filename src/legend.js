@@ -113,6 +113,7 @@ function Legend(color, {
             .rangeRound([marginLeft, width - marginRight]);
 
         svg.append("g")
+            .classed("legend-bins", true)
             .selectAll("rect")
             .data(color.range())
             .join("rect")
@@ -122,13 +123,41 @@ function Legend(color, {
             .attr("height", height - marginTop - marginBottom)
             .attr("fill", d => d)
             // event handlers added by me
-            .on("mouseover", function (d, i) {
-                d3.selectAll("path.c" + i.substring(1)).attr("stroke", "black").raise();
-                d3.select(this).attr("stroke", "black");
+            .on("click", function (d, i) {
+                const currentBin = d3.select(this);
+                const legend = d3.select(currentBin.node().parentNode).selectChildren();
+                if (currentBin.classed("selected") == false) {
+                    d3.selectAll("path.country").attr("stroke", "darkgrey"); //uncolour countries
+                    d3.selectAll("path.c" + i.substring(1)).attr("stroke", "black").raise();
+                    currentBin.style("stroke", "black");
+                    currentBin.classed("selected", true);
+                    legend.each(function () {
+                        const bin = d3.select(this);
+                        if (bin.node() != currentBin.node()) {
+                            bin.style("stroke", "none");
+                            bin.classed("selected", false);
+                        }
+
+                    });
+                }
+                else {
+                    d3.selectAll("path.c" + i.substring(1)).attr("stroke", "darkgrey");
+                    currentBin.classed("selected", false);
+                }
             })
-            .on("mouseout", function (d, i) {
-                d3.selectAll("path.c" + i.substring(1)).attr("stroke", "darkgrey");
-                d3.select(this).attr("stroke", "none");
+            .on("mouseenter", function () {
+                const currentBin = d3.select(this);
+                if (currentBin.classed("selected") == false)
+                    currentBin.style("stroke", "black");
+                else
+                    currentBin.style("stroke", "none");
+            })
+            .on("mouseleave", function () {
+                const currentBin = d3.select(this);
+                if (currentBin.classed("selected") == false)
+                    currentBin.style("stroke", "none");
+                else
+                    currentBin.style("stroke", "black");
             });
 
         tickValues = d3.range(thresholds.length);
