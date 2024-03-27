@@ -176,12 +176,7 @@ button.continent-zoom.clicked {
     background-color: lightgrey;
 }
 
-button.continent-zoom.unclicked:hover {
-    border-color: grey;
-    background-color: lightgrey;
-}
-
-button.continent-zoom.clicked:hover {
+button.continent-zoom.unclicked {
     background-color: buttonface;
     border-color: lightgray;
 }

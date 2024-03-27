@@ -85,7 +85,9 @@ function setupRegionsZoom() {
         .classed("unclicked", true)
         .text("Africa")
         .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("africa"));
+        .on("click", () => zoomToContinent("africa"))
+        .on("mouseenter", (event) => styleHover("africa", event))
+        .on("mouseleave", (event) => styleHover("africa", event));
 
     container.append("button")
         .attr("id", "asia")
@@ -93,7 +95,9 @@ function setupRegionsZoom() {
         .classed("unclicked", true)
         .text("Asia")
         .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("asia"));
+        .on("click", () => zoomToContinent("asia"))
+        .on("mouseenter", (event) => styleHover("asia", event))
+        .on("mouseleave", (event) => styleHover("asia", event));
 
     container.append("button")
         .attr("id", "europe")
@@ -101,7 +105,9 @@ function setupRegionsZoom() {
         .classed("unclicked", true)
         .text("Europe")
         .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("europe"));
+        .on("click", () => zoomToContinent("europe"))
+        .on("mouseenter", (event) => styleHover("europe", event))
+        .on("mouseleave", (event) => styleHover("europe", event));
 
     container.append("button")
         .attr("id", "northAmerica")
@@ -109,7 +115,9 @@ function setupRegionsZoom() {
         .classed("unclicked", true)
         .text("North America")
         .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("northAmerica"));
+        .on("click", () => zoomToContinent("northAmerica"))
+        .on("mouseenter", (event) => styleHover("northAmerica", event))
+        .on("mouseleave", (event) => styleHover("northAmerica", event));
 
     container.append("button")
         .attr("id", "oceania")
@@ -117,7 +125,9 @@ function setupRegionsZoom() {
         .classed("unclicked", true)
         .text("Oceania")
         .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("oceania"));
+        .on("click", () => zoomToContinent("oceania"))
+        .on("mouseenter", (event) => styleHover("oceania", event))
+        .on("mouseleave", (event) => styleHover("oceania", event));
 
     container.append("button")
         .attr("id", "southAmerica")
@@ -125,17 +135,36 @@ function setupRegionsZoom() {
         .classed("unclicked", true)
         .text("South America")
         .style("margin-right", "10px")
-        .on("click", () => zoomToContinent("southAmerica"));
+        .on("click", () => zoomToContinent("southAmerica"))
+        .on("mouseenter", (event) => styleHover("southAmerica", event))
+        .on("mouseleave", (event) => styleHover("southAmerica", event));
 }
 
-function styleButton(selected, zoomIn) {
+function styleButton(selectedButton, zoomedIn) {
     d3.selectAll(".continent-zoom")
         .classed("unclicked", true)
-        .classed("clicked", false);
-    if (zoomIn)
-        d3.select("#" + selected)
+        .classed("clicked", false)
+        .style("background-color", null)
+        .style("border-color", null);
+    if (zoomedIn)
+        d3.select("#" + selectedButton)
             .classed("unclicked", false)
             .classed("clicked", true);
+}
+
+function styleHover(continent, event) {
+    const button = d3.select("#" + continent);
+    const colourDarker = (button.classed("clicked") == true && event.type == "mouseleave")
+        || (button.classed("unclicked") == true && event.type == "mouseenter");
+
+    if (colourDarker) {
+        button.style("background-color", "lightgrey");
+        button.style("border-color", "grey");
+    }
+    else {
+        button.style("background-color", "buttonface");
+        button.style("border-color", "lightgrey");
+    }
 }
 
 function zoomToContinent(continent) {
