@@ -158,18 +158,25 @@ function Legend(color, {
                     currentBin.classed("selected", false);
                 }
             })
-            .on("mouseenter", function () {
+            .on("mouseenter", function (d, i) {
                 const currentBin = d3.select(this);
-                if (currentBin.classed("selected") == false)
+                if (currentBin.classed("selected") == false) {
                     currentBin.style("stroke", "black");
+                    d3.selectAll("path.c" + i.substring(1)).attr("stroke", "black").raise();
+                }
                 else
                     currentBin.style("stroke", "none");
             })
-            .on("mouseleave", function () {
+            .on("mouseleave", function (d, i) {
                 const currentBin = d3.select(this);
-                if (currentBin.classed("selected") == false)
+                if (currentBin.classed("selected") == false) {
+                    d3.selectAll("path.c" + i.substring(1)).attr("stroke", "darkgrey");
+                    d3.selectAll("path").each(function () {
+                        if (d3.select(this).attr("stroke") == "black")
+                            d3.select(this).raise();
+                    });
                     currentBin.style("stroke", "none");
-                else
+                } else
                     currentBin.style("stroke", "black");
             });
 
