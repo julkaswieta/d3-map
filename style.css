@@ -4,6 +4,7 @@ body {
     justify-content: center;
     display: flex;
     flex-flow: row wrap;
+    align-items: flex-start;
     min-width: 300px;
     padding-top: 20px;
 }
