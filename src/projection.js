@@ -17,7 +17,7 @@ export function resizeMap(defaultSize) {
         width = mapSize.width;
         height = mapSize.height;
     }
-    projection.fitExtent([[10, 0], [width - 10, height - 50]], getGeoJson());
+    projection.fitExtent([[10, -20], [width - 10, height - 50]], getGeoJson());
 }
 
 export function getPathGenerator() {
